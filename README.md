@@ -1,2 +1,2 @@
-# quick-compare
-Flexible side by side comparison App
+# Quick-compare
+Flexible side by side comparison app
