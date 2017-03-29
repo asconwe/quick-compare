@@ -2,21 +2,223 @@
 <html>
 <head>
 	<title>Quick-compare</title>
-	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 	<script type="text/javascript", src="assets/javascript/app.js"></script>
 	<script type="text/javascript", src="assets/javascript/ui.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Bowlby+One+SC|Gurajada" rel="stylesheet">
+	<style>
+
+		body {
+			background-color: #08253d;
+			background-image: url(background_1.jpg);		
+		}
+
+		h1 {
+			font-family: 'Bowlby One SC', cursive;
+			font-size: 45px;
+		}
+
+		h3 {
+			font-family: 'Gurajada', serif;
+			font-size: 35px;
+		}
+
+
+
+		.container {
+
+			float:top;
+			text-align:center;
+			width: 1050px;
+			height: 1250px;
+			padding: 100px;
+			background-color: white;
+			padding-top:10px;
+			margin-left:auto;
+			margin-right:auto;
+			font-family: 'Gurajada', serif;
+			font-size: 35px;
+		}
+
+
+	</style>
 </head>
 <body>
+
 	<div class="container">
-		<div class="row">
-			<div class="col-xs-12">
-				<!-- div to display all prompts and comparison-->
-				<div id="fullDisplay">
+
+		<!--HEADER-->
+		<div class="col-lg-12">
+			<div class="row-fluid">
+				<div class="page-header">
+					<h1 class="text-center"><strong>STOCK WATCH</strong></h1>
+					<h3 class="text-center">Investment Decisions Made Faster</h3>
+				</div> 
+			</div> 
+
+			<!-- FIRST ROW -->
+			<!-- TOP LEFT SEARCH SECTION-->
+			<div class="row1">
+
+				<!-- TOP LEFT SEARCH FIELD -->
+				<div class="col-lg-6">
+					<form class="input-group">
+						<input type="text" class="form-control" id="left-search" placeholder="Search for...">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="submit">Go!</button>
+							<button class="btn btn-default btn-md left-button" id="left-button"><span class="glyphicon glyphicon-refresh"></span></button>
+						</span>
+					</form> 
+				</div>
+
+				<!-- TOP RIGHT SEARCH FIELD-->
+				<div class="col-lg-6">
+					<form class="input-group">
+						<input type="text" class="form-control" id="right-search" placeholder="Search for...">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button">Go!</button>
+							<button class="btn btn-default btn-md right-button" id="right-button"><span class="glyphicon glyphicon-refresh"></span></button>
+						</span>
+					</form><!-- /input-group -->
+				</div><!-- /.col-lg-6 -->
+			</div><!-- /input-row1 -->
+
+
+			<!-- SECOND ROW -->
+
+			<div class="row2">
+
+				<!-- DATE PICKER -->
+
+				<div class='col-md-6'>
+					<div class="form-group">
+						<div class='input-group date' id='datetimepicker6'>
+							<input type='date' id="start-date" placeholder="Start Date..." class="form-control" />
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-calendar"></span>
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<div class='col-md-6'>
+					<div class="form-group">
+						<div class='input-group date' id='datetimepicker7'>
+							<input type='date' id="end-date" placeholder="End Date..." class="form-control" />
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-calendar"></span>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+	<!--  <script type="text/javascript">
+	    $(function () {
+	        $('#datetimepicker6').datetimepicker();
+	        $('#datetimepicker7').datetimepicker({
+	            useCurrent: false //Important! See issue #1075
+	        });
+	        $("#datetimepicker6").on("dp.change", function (e) {
+	            $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+	        });
+	        $("#datetimepicker7").on("dp.change", function (e) {
+	            $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+	        });
+	    });
+	</script>
+
+	
+	<!-THIRD ROW -->
+
+	<div class="row3">
+
+
+		<!-- LEFT PANEL DISPLAY -->
+		<div class="col-lg-6">
+			
+			<div class="row5">
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Selected Stock #1</h3>
+					</div>
+					<div class="panel-body">
+						<div class="text-center">
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- RIGHT PANEL DISPLAY -->
+		<div class="col-lg-6">
+
+			<div class="row5">
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Selected Stock #2</h3>
+					</div>
+					<div class="panel-body">
+						<div class="text-center">
+
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+
+	<!--FOURTH ROW-->
+	<div class="row4">
+
+		<!-- LEFT PANEL RESULTS DISPLAY -->
+		<div class="col-lg-6">
+
+			<div class="row6">
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Stock #1 Results Display</h3>
+					</div>
+					<div class="panel-body">
+						<div class="text-center">
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- RIGHT PANEL RESULTS DISPLAY -->
+		<div class="col-lg-6">
+
+			<div class="row6">
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Stock #2 Results Display</h3>
+					</div>
+					<div class="panel-body">
+						<div class="text-center">
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+
+</div>	
+
 </body>
-</html>
+</html> -->

@@ -1,3 +1,4 @@
+
 /*
 To do: Enter key should behave the same as click
 To do: On submit, if there is no data-symbol attribute, then search markitondemand api for one before submitting to quandl api
@@ -87,6 +88,7 @@ $( document ).ready(function() {
 		}
 	}
 
+
 	// Handle errors from the ajax request !! Needs improvement
 	function handleError(error) {
 		console.log('error', error);
@@ -99,6 +101,8 @@ $( document ).ready(function() {
 		// Stop displaying the results
 		$('#type-result').html('');
 	});
+
+
 
 	// Save jQuery search field object in 'field'
 	field = $('#left-search');
@@ -201,5 +205,6 @@ $( document ).ready(function() {
 			}
 		});
   // });
+
 
 });
