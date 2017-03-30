@@ -1,0 +1,56 @@
+body {
+	background-color: #08253d;
+	background-image: url(background_1.jpg);		
+}
+
+h1 {
+	font-family: 'Bowlby One SC', cursive;
+	font-size: 45px;
+}
+
+h3 {
+	font-family: 'Gurajada', serif;
+	font-size: 35px;
+}
+
+
+
+.container {
+
+	float:top;
+	text-align:center;
+	width: 1050px;
+	height: 1250px;
+	padding: 100px;
+	background-color: white;
+	padding-top:10px;
+	margin-left:auto;
+	margin-right:auto;
+	font-family: 'Gurajada', serif;
+	font-size: 35px;
+}
+
+#type-result {
+	
+}
+
+.result-li {
+	font-size: 15pt;
+	border: solid 1px #744;
+	padding: 3px;
+	list-style: none;
+	font-weight: light;
+	
+}
+
+.result-li:hover {
+	background: #eee;
+}
+
+.full-name {
+	float: left;
+}
+
+.ticker {
+	float: right;
+}
