@@ -10,13 +10,6 @@ var config = {
   var stockObjectOne;
   var stockObjectTwo;
 
-// Required date format YYYY-MM-DD
-
-// Call this function
-function displayResults() {
-
-};
-
 
 $("#left-button").on("click", function(){  // grabs the values from the left form. 
 	var stockNameOne = $("#left-search").val().trim(); 
@@ -25,9 +18,11 @@ $("#left-button").on("click", function(){  // grabs the values from the left for
 
 	    stockObjectOne = { // saves all of those into an object
 		stockName: stockNameOne,
+		tickerOne: tickerOne,
 		startDateSelected: startDateSelectedOne,
 		endDateSelected: endDateSelectedOne
 	}
+
 
 	database.ref().push(stockObjectOne).then(function(snapshot){
 		localStorage.setItem("user_key_one", snapshot.key); // saves that data in the database.
@@ -42,6 +37,7 @@ $("#right-button").on("click", function(){
 
 	 	stockObjectTwo = {
 		stockName: stockNameTwo,
+		tickerTwo: tickerTwo,
 		startDateSelected: startDateSelectedTwo,
 		endDateSelected: endDateSelectedTwo
 	}

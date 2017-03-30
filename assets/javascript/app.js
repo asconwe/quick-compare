@@ -1,30 +1,32 @@
-var queryURL;
-var globalStartDate = stockObjectOne.startDateSelectedOne;
-var globalEndDate = stockObjectOne.endDateSelectedOne;
-var tickerSymbolOne = tickerOne;
-var tickerSymbolTwo = tickerTwo;
+var makeQueryURLOne = function() {
+	var startDate = stockObjectOne.startDateSelectedOne;
+	var endDate = stockObjectOne.endDateSelectedOne;
+	var tickerSymbolOne = stockObjectOne.tickerOne;
+	var queryURLOne = "https://www.quandl.com/api/v3/datasets/WIKI/" + tickerSymbolOne + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
+	return queryURLOne; 
 
-var queryURLOne = "https://www.quandl.com/api/v3/datasets/WIKI/" + tickerSymbol + ".json?" + "column_index=1&start_date=" + globalStartDate + "&end_date=" + globalEndDate + "&api_key=JNYYRNrxvRMk1fGkoMUp"; //Sets up the Query URL to give us the date and the price on that date. 
+ }
 
-var queryURLTwo = "https://www.quandl.com/api/v3/datasets/WIKI/" + tickerSymbolTwo + ".json?" + "column_index=1&start_date=" + globalStartDate + "&end_date=" + globalEndDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
-
-
-// var makeQueryURL = function() {
-
-// }
+var makeQueryURLTwo = function() {
+	var tickerSymbolTwo = stockObjectTwo.tickerTwo;
+	var startDate = stockObjectOne.startDateSelectedOne;
+	var endDate = stockObjectOne.endDateSelectedOne;
+	var queryURLTwo = "https://www.quandl.com/api/v3/datasets/WIKI/" + tickerSymbolTwo + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
+	return queryURLTwo;
+}
 
 var displayStockOne = function() {
 	$.ajax({
-		url: queryURL,
+		url: makeQueryURLOne(),
 		method: "GET"
 	}).done(function(response){
-		var stockObjectOne= {} // creates an object that will give FE the name, date array, starte date, end date
+		var stockResultOne= {} // creates an object that will give FE the name, date array, starte date, end date
 		var data = response.dataset;
-		stockObjectOne.name = data.name; //users dot notation to create the object.
-		stockObjectOne.dateArray = data.data;
-		stockObjectOne.startDate = startSender(data.data);
-		stockObjectOne.endDate = endSender(data.data);
-		console.log(stockObjectOne);
+		stockResultOne.name = data.name; //users dot notation to create the object.
+		stockResultOne.dateArray = data.data;
+		stockResultOne.startDate = startSender(data.data);
+		stockResultOne.endDate = endSender(data.data);
+		displayResult(stockResultTwo, "left");
 		
 	})
 }
@@ -41,19 +43,22 @@ var endSender = function(arr) { // cute little function that grabs the first ite
 
 var displayStockTwo = function() {
 	$.ajax({
-		url: queryURLTwo,
+		url: makeQueryURLTwo(),
 		method: "GET"
 	}).done(function(response){
-		var stockObjectTwo= {} // creates an object that will give FE the name, date array, starte date, end date
+		var stockResultTwo= {} // creates an object that will give FE the name, date array, starte date, end date
 		var data = response.dataset;
-		stockObjectTwo.name = data.name; //users dot notation to create the object.
-		stockObjectTwo.dateArray = data.data;
-		stockObjectTwo.startDate = startSender(data.data);
-		stockObjectTwo.endDate = endSender(data.data);
-		console.log(stockObjectTwo);
+		stockResultTwo.name = data.name; //users dot notation to create the object.
+		stockResultTwo.dateArray = data.data;
+		stockResultTwo.startDate = startSender(data.data);
+		stockResultTwo.endDate = endSender(data.data);
+		displayResult(stockResultTwo, "right");
+
 		
 	})
 }
 
-displayStocks();
+displayStockOne();
+displayStockTwo();
+
 
