@@ -31,19 +31,21 @@ h3 {
 }
 
 #type-result {
-	
 }
 
-.result-li {
+.left-result-li, .right-result-li{
 	font-size: 15pt;
 	border: solid 1px #744;
-	padding: 3px;
+	padding: 5px;
 	list-style: none;
 	font-weight: light;
+	margin: 0;
+	float: left;
+	width: 100%;
 	
 }
 
-.result-li:hover {
+.left-result-li:hover, .right-result-li:hover {
 	background: #eee;
 }
 

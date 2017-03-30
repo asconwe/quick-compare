@@ -1,42 +1,44 @@
 
 var config = {
-    apiKey: "AIzaSyA1ot93Xhw0Iemmof8EeVvGFcDCFaNf4bs",
-    authDomain: "stock-compare.firebaseapp.com",
-    databaseURL: "https://stock-compare.firebaseio.com",
-    storageBucket: "stock-compare.appspot.com",
-    messagingSenderId: "384877267053"
-  };
-  firebase.initializeApp(config);
-  var database = firebase.database();
-  var stockObjectOne;
-  var stockObjectTwo;
+	apiKey: "AIzaSyA1ot93Xhw0Iemmof8EeVvGFcDCFaNf4bs",
+	authDomain: "stock-compare.firebaseapp.com",
+	databaseURL: "https://stock-compare.firebaseio.com",
+	storageBucket: "stock-compare.appspot.com",
+	messagingSenderId: "384877267053"
+};
+
+firebase.initializeApp(config);
+var database = firebase.database();
+var stockObjectOne;
+var stockObjectTwo;
 
 
-$("#left-button").on("click", function(){  // grabs the values from the left form. 
+
+var submitStockOne = function(){  
 	var stockNameOne = $("#left-search").val().trim(); 
 	var startDateSelectedOne = $("#start-date").val().trim(); 
 	var endDateSelectedOne = $("#end-date").val().trim(); 
-  
+
   	    stockObjectOne = { // saves all of those into an object
-		stockName: stockNameOne,
-		tickerOne: tickerOne,
-		startDateSelected: startDateSelectedOne,
-		endDateSelected: endDateSelectedOne
-	}
+  	    	stockName: stockNameOne,
+  	    	tickerOne: tickerOne,
+  	    	startDateSelected: startDateSelectedOne,
+  	    	endDateSelected: endDateSelectedOne
+  	    }
 
 
-	database.ref().push(stockObjectOne).then(function(snapshot){
+  	    database.ref().push(stockObjectOne).then(function(snapshot){
 		localStorage.setItem("user_key_one", snapshot.key); // saves that data in the database.
 	});
 
-});
+}
 
-$("#right-button").on("click", function(){
+var submitStockTwo = function(){
 	var stockNameTwo = $("#right-search").val().trim();
 	var startDateSelectedTwo = $("#start-date").val().trim();
 	var endDateSelectedTwo = $("#end-date").val().trim();
 
-	 	stockObjectTwo = {
+	stockObjectTwo = {
 		stockName: stockNameTwo,
 		tickerTwo: tickerTwo,
 		startDateSelected: startDateSelectedTwo,
@@ -47,7 +49,7 @@ $("#right-button").on("click", function(){
 		localStorage.setItem("user_key_two", snapshot.key);
 	});
 
-});
+};
 
 
 /*
@@ -59,7 +61,8 @@ To do: Prevent -1 from pointing to the end of the list
 To do: Improve ajax error handling / find out about current errors
 */
 
-
+///////////////////////
+var column = 'left'; // !! figure out how to set this
 
 // Declare variables
 var waitingInterval;
@@ -77,12 +80,13 @@ var tickerTwo;
 // On form submit, do this
 $('#left-input-form').submit(function(event) {
 	// Clear the typeahead results
-	$('#type-result').html('');
-	console.log('submitted');
+	$('#left-type-result').html('');
 	// Stop the waiting animation interval
 	clearInterval(waitingInterval);
 	// Rest the text of the search button
 	$('#left-button').val('search');
+
+	console.log('submitted');
 	// Prevent default submit behavior
 	event.preventDefault();
 });
@@ -90,12 +94,12 @@ $('#left-input-form').submit(function(event) {
 // Create a new click handler for the dropdown typeahead results
 function setResultClickHandler() {
 	// On reult click, do this
-	$('.result-li').mousedown(function(){
+	$('.' + column + '-result-li').mousedown(function(){
 		console.log('click');
 		// Get stock company name from the data-name attribute of the result clicked and populate the search field with it
 		field.val($(this).data('name'));
 		// Set the #left-search data-symbol attribute as the result's data-symbol attribute
-		$('#left-search').data('symbol', $(this).data('symbol'));
+		$('#' + column + '-search').data('symbol', $(this).data('symbol'));
 		// Submit the form
 		$('#left-input-form').submit();
 	})
@@ -110,9 +114,9 @@ function typeAhead(response) {
 	// Stop the waiting animation 
 	clearInterval(waitingInterval);
 	// Reset the text in search button
-	$('#left-button').val('search');
+	$('#' + column + '-button').val('search');
 	// Clear previous typeahead results
-	$('#type-result').html('');
+	$('#' + column + '-type-result').html('');
 	console.log('starts here', arr);
 	// !! Make sure this if statement useful
 	// If there is something in the response array
@@ -132,7 +136,7 @@ function typeAhead(response) {
 				symbol = value.Symbol.slice(0, 4) + '...';
 			}
 			// Add it to the result dropdown list
-			$('#type-result').append('<li class="result-li" data-name="' + value.Name + '" data-symbol="' + value.Symbol + '"><span class="full-name">' + name + '</span><span class="ticker">' + symbol + '</span><br></li>');
+			$('#' + column + '-type-result').append('<li class="' + column + '-result-li" data-name="' + value.Name + '" data-symbol="' + value.Symbol + '"><span class="full-name">' + name + '</span><span class="ticker">' + symbol + '</span><br></li>');
 		})
 		// Set a click handler for the results
 		setResultClickHandler();
@@ -144,55 +148,62 @@ function typeAhead(response) {
 function handleError(error) {
 	console.log('error', error);
 	clearInterval(waitingInterval);
-	$('#left-button').val('search');
+	$('#' + column + '-button').val('search');
 }
 
 // On search field blur, do this
-$('#left-search').blur(function() {
+$('#' + column + '-search').blur(function() {
 	// Stop displaying the results
-	$('#type-result').html('');
+	$('#' + column + '-type-result').html('');
+	// Reset list index;
+	lIndex = -1;
 });
 
 
 
 // Save jQuery search field object in 'field'
-field = $('#left-search');
+field = $('#' + column + '-search');
+
 
 // Highlight the result list item at a given index
 function highlightFromList(index) {
 	console.log(index);
-	$('.result-li').css({ 'background':'#311' });
-	$('.result-li').eq(index).css({ 'background': '#422'});
+	$('.' + column + '-result-li').css({ 'background':'#311' });
+	$('.' + column + '-result-li').eq(index).css({ 'background': '#422'});
 }
 
+function submitAtIndex(index, column) {
+
+}
 
 // When a user types in the search field (key down), do this
 field.keydown(function(e) {
 	console.log(e.key);
 	// If the key is not an up or down arrow key
-	if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') {
+	if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown' && e.key !== 'Enter') {
 		// Don't run the previously initiated ajax request
 		clearInterval(ajaxInterval);
 	// If the key is an up or down arrow key
-} else {
+	} else {
 		// Prevent default arrow key behavior (moving the cursor)
 		e.preventDefault();
 		// If up key pressed and the Index to highlight is within range
 		if (e.key === 'ArrowUp' && lIndex >= 0) {
 			lIndex--;
 		// If down key pressed and the Index to highlight is within range
-	} else if (e.key === 'ArrowDown' && lIndex < arr.length) {
-		lIndex++;
-	}
+		} else if (e.key === 'ArrowDown' && lIndex < arr.length) {
+			lIndex++;
+		} else if (e.key === 'Enter' && lIndex >= 0) {
+			submitAtIndex(lIndex, column);
+		}
 		// Highlight the item in the list at the selected index
-		highlightFromList(lIndex);
+		highlightFromList(lIndex, column);
 		
 	}
 });
 
 // When the user types in the search field (key up), do this
 field.keyup(function(e) {
-
 	// !! change this to be if the key is a letter or number
 	// If the key is not an up or dow narrow
 	if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') {
@@ -205,16 +216,16 @@ field.keyup(function(e) {
 		}
 		
 		// Clear the results list
-		$('#type-result').html('');
+		$('#' + column + '-type-result').html('');
 		// Stop the animation before adding a new interval (otherwise the animation would be running twice)
 		clearInterval(waitingInterval)
 		// Run a waiting/loading animation
 		waitingInterval = setInterval(function(){
 			// !! Make a better, prettier animation
-			if ($('#left-button').val() !== '-') {
-				$('#left-button').val('-');
+			if ($('#' + column + '-button').val() !== '-') {
+				$('#' + column + '-button').val('-');
 			} else {
-				$('#left-button').val(' ');
+				$('#' + column + '-button').val(' ');
 			}
 		}, 100);
 		
@@ -247,9 +258,9 @@ field.keyup(function(e) {
 				ajaxRequests[counter].abort();
 			}
 			// Reset the button value
-			$('#left-button').val('search');
+			$('#' + column + '-button').val('search');
 			// Clear the results list
-			$('#type-result').html('');
+			$('#' + column + '-type-result').html('');
 		}
 	}
 });

@@ -58,7 +58,7 @@ var displayStockTwo = function() {
 	})
 }
 
-displayStockOne();
-displayStockTwo();
+// displayStockOne();
+// displayStockTwo();
 
 
