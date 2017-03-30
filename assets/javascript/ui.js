@@ -33,7 +33,6 @@ $( document ).ready(function() {
 		$('#left-button').val('search');
 		// Prevent default submit behavior
 		event.preventDefault();
-
 	});
 	
 	// Create a new click handler for the dropdown typeahead results
