@@ -29,7 +29,7 @@
 				<!-- TOP LEFT SEARCH FIELD -->
 				<div class="col-xs-6">
 					<form class="input-group" id="left-input-form">
-						<input type="text" class="form-control" id="left-search" placeholder="Search for..." autocomplete="off">
+						<input type="text" class="form-control search" id="left-search" placeholder="Search for..." data-column="left" autocomplete="off">
 						<span class="input-group-btn">
 							<input class="btn btn-default" type="submit" id="left-button" value="Search" />
 						</span>
@@ -42,13 +42,14 @@
 				<!-- TOP RIGHT SEARCH FIELD-->
 				<div class="col-xs-6">
 					<form class="input-group" id="right-input-form">
-						<input type="text" class="form-control" id="right-search" placeholder="Search for...">
+						<input type="text" class="form-control search" id="right-search" placeholder="Search for..." data-column="right" autocomplete="off">
 						<span class="input-group-btn">
-							<button class="btn btn-default" type="button">Go!</button>
-							<button class="btn btn-default btn-md right-button" id="right-button"><span class="glyphicon glyphicon-refresh"></span></button>
+							<input class="btn btn-default" id="right-button" type="button" value="Search" />
 						</span>
 					</form><!-- /input-group -->
-					<ul id="right-type-result"></ul>
+					<div class="col-xs-12">
+						<ul id="right-type-result"></ul>
+					</div>
 				</div><!-- /.col-xs-6 -->
 			</div><!-- /input-row1 -->
 
@@ -82,23 +83,6 @@
 				</div>
 			</div>
 
-
-	<!--  <script type="text/javascript">
-	    $(function () {
-	        $('#datetimepicker6').datetimepicker();
-	        $('#datetimepicker7').datetimepicker({
-	            useCurrent: false //Important! See issue #1075
-	        });
-	        $("#datetimepicker6").on("dp.change", function (e) {
-	            $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
-	        });
-	        $("#datetimepicker7").on("dp.change", function (e) {
-	            $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
-	        });
-	    });
-	</script>
-
-	
 	<!-THIRD ROW -->
 
 	<div class="row3">

@@ -65,7 +65,8 @@ To do: Improve ajax error handling / find out about current errors
 var column = 'left'; // !! figure out how to set this
 
 // Declare variables
-var waitingInterval;
+var leftWaitingInterval;
+var rightWaitingInterval;
 var ajaxInterval;
 var ajaxRequests = [];
 var counter = 0;
@@ -77,21 +78,33 @@ var field;
 var tickerOne;
 var tickerTwo;
 
-// On form submit, do this
-$('#left-input-form').submit(function(event) {
-	event.preventDefault();
+function submitForm(column) {
+	
 	setTimeout(function(){
 
 		// Clear the typeahead results
-		$('#left-type-result').html('');
+		$('#' + column + '-type-result').html('');
 		// Stop the waiting animation interval
-		clearInterval(waitingInterval);
+		clearInterval(leftWaitingInterval);
+		clearInterval(rightWaitingInterval);
 		// Rest the text of the search button
-		$('#left-button').val('search');
+		$('#' + column + '-button').val('search');
 
 		console.log('submitted');
 		// Prevent default submit behavior
 	}, 20)
+	
+}
+
+// On left orm submit, do this
+$('#left-input-form').submit(function(event) {
+	event.preventDefault();
+	submitForm('left');
+});
+
+$('#right-input-form').submit(function(event) {
+	event.preventDefault();
+	submitForm('right');
 });
 
 // Create a new click handler for the dropdown typeahead results
@@ -102,7 +115,7 @@ function setResultClickHandler() {
 		// Get stock company name from the data-name attribute of the result clicked and populate the search field with it
 		field.val($(this).data('name'));
 		// Set the #left-search data-symbol attribute as the result's data-symbol attribute
-		if (column = 'left') {
+		if (column === 'left') {
 			tickerOne = $(this).data('symbol');
 			// Submit the form
 			$('#left-input-form').submit();
@@ -120,7 +133,8 @@ function typeAhead(response) {
 	// Reset result list index to -1 (nothing selected)
 	lIndex = -1;
 	// Stop the waiting animation 
-	clearInterval(waitingInterval);
+	clearInterval(leftWaitingInterval);
+	clearInterval(rightWaitingInterval);
 	// Reset the text in search button
 	$('#' + column + '-button').val('search');
 	// Clear previous typeahead results
@@ -155,23 +169,10 @@ function typeAhead(response) {
 // Handle errors from the ajax request !! Needs improvement
 function handleError(error) {
 	console.log('error', error);
-	clearInterval(waitingInterval);
+	clearInterval(leftWaitingInterval);
+	clearInterval(rightWaitingInterval);
 	$('#' + column + '-button').val('search');
 }
-
-// On search field blur, do this
-$('#' + column + '-search').blur(function() {
-	// Stop displaying the results
-	$('#' + column + '-type-result').html('');
-	// Reset list index;
-	lIndex = -1;
-});
-
-
-
-// Save jQuery search field object in 'field'
-field = $('#' + column + '-search');
-
 
 // Highlight the result list item at a given index
 function highlightFromList(index) {
@@ -185,92 +186,134 @@ function submitAtIndex(index, column) {
 	field.val(stockListItem.data('name'));
 }
 
-// When a user types in the search field (key down), do this
-field.keydown(function(e) {
-	console.log(e.key);
-	// If the key is not an up or down arrow key
-	if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown' && e.key !== 'Enter') {
-		// Don't run the previously initiated ajax request
-		clearInterval(ajaxInterval);
-	// If the key is an up or down arrow key
-	} else {
-		// Prevent default arrow key behavior (moving the cursor)
-		e.preventDefault();
-		// If up key pressed and the Index to highlight is within range
-		if (e.key === 'ArrowUp' && lIndex >= 0) {
-			lIndex--;
-		// If down key pressed and the Index to highlight is within range
-		} else if (e.key === 'ArrowDown' && lIndex < arr.length) {
-			lIndex++;
-		} else if (e.key === 'Enter' && lIndex >= 0) {
-			submitAtIndex(lIndex, column);
-		}
-		// Highlight the item in the list at the selected index
-		highlightFromList(lIndex, column);
-	}
-});
-
-// When the user types in the search field (key up), do this
-field.keyup(function(e) {
-	// !! change this to be if the key is a letter or number
-	// If the key is not an up or dow narrow
-	if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') {
-		
-		// Add to the ajax request counter !! Should this be moved to the end of this function?
-		counter++;
-		// Abort any pending ajax request
-		if (ajaxRequests[counter - 1] !== undefined) {
-			ajaxRequests[counter - 1].abort();
-		}
-		
-		// Clear the results list
-		$('#' + column + '-type-result').html('');
-		// Stop the animation before adding a new interval (otherwise the animation would be running twice)
-		clearInterval(waitingInterval)
+function animateLeftWaiting() {
+	// Stop the animation before adding a new interval (otherwise the animation would be running twice)
+		clearInterval(leftWaitingInterval);
 		// Run a waiting/loading animation
-		waitingInterval = setInterval(function(){
+		leftWaitingInterval = setInterval(function(){
 			// !! Make a better, prettier animation
-			if ($('#' + column + '-button').val() !== '-') {
-				$('#' + column + '-button').val('-');
+			if ($('#left-button').val() !== '-') {
+				$('#left-button').val('-');
 			} else {
-				$('#' + column + '-button').val(' ');
+				$('#left-button').val(' ');
 			}
 		}, 100);
-		
-		// Save the user input to the search variable
-		var search = field.val();
-		console.log('search', search);
-		console.log('counter', counter);
-		// If the search is not empty 
-		if (search.length > 0) {
-			// Run the request stock info from MarkitOnDemand API
-			ajaxInterval = setTimeout(function(){
-				var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/jsonp';
-				ajaxRequests[counter] = $.ajax({
-					data: { 'input': search },
-					url: url,
-					dataType: 'jsonp',
-					success: typeAhead,
-					error: handleError,
-					context: this
-				})
-			}, 500 )
-		// If the search is empty (if the user deleted their search term), do this
-	} else {
-			// Stop the animation
-			clearInterval(waitingInterval);
-			// Stop any ajax requests that have not yet been sent
-			clearInterval(ajaxInterval);
-			// Stop any ajax requets that have already been sent
-			if (ajaxRequests[counter] !== undefined) {
-				ajaxRequests[counter].abort();
+}
+
+function animateRightWaiting() {
+	// Stop the animation before adding a new interval (otherwise the animation would be running twice)
+		clearInterval(rightWaitingInterval);
+		// Run a waiting/loading animation
+		rightWaitingInterval = setInterval(function(){
+			// !! Make a better, prettier animation
+			if ($('#right-button').val() !== '-') {
+				$('#right-button').val('-');
+			} else {
+				$('#right-button').val(' ');
 			}
-			// Reset the button value
-			$('#' + column + '-button').val('search');
-			// Clear the results list
-			$('#' + column + '-type-result').html('');
+		}, 100);
+}
+
+// Save jQuery search field object in 'field'
+fieldClass = $('.search');
+
+// On search field blur, do this
+fieldClass.blur(function() {
+	// Remove event handlers
+	$('#left-search').off('keydown');
+	$('#left-search').off('keyup');
+	$('#right-search').off('keydown');
+	$('#right-search').off('keyup');
+	// Stop displaying the results
+	$('#' + column + '-type-result').html('');
+	// Reset list index;
+	lIndex = -1;
+});
+
+fieldClass.focusin(function() {
+	column = $(this).data('column');
+	field = $('#' + column + '-search');
+	// When a user types in the search field (key down), do this
+	field.on('keydown', function(e) {
+		console.log(field.attr('id'));
+		console.log(e.key);
+		// If the key is not an up or down arrow key
+		if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown' && e.key !== 'Enter') {
+			// Don't run the previously initiated ajax request
+			clearInterval(ajaxInterval);
+		// If the key is an up or down arrow key
+		} else {
+			// Prevent default arrow key behavior (moving the cursor)
+			e.preventDefault();
+			// If up key pressed and the Index to highlight is within range
+			if (e.key === 'ArrowUp' && lIndex >= 0) {
+				lIndex--;
+			// If down key pressed and the Index to highlight is within range
+			} else if (e.key === 'ArrowDown' && lIndex < arr.length) {
+				lIndex++;
+			} else if (e.key === 'Enter' && lIndex >= 0) {
+				submitAtIndex(lIndex, column);
+			}
+			// Highlight the item in the list at the selected index
+			highlightFromList(lIndex, column);
 		}
-	}
+	});
+
+	// When the user types in the search field (key up), do this
+	field.on('keyup', function(e) {
+		// !! change this to be if the key is a letter or number
+		// If the key is not an up or dow narrow
+		if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') {
+
+			// Add to the ajax request counter !! Should this be moved to the end of this function?
+			counter++;
+			// Abort any pending ajax request
+			if (ajaxRequests[counter - 1] !== undefined) {
+				ajaxRequests[counter - 1].abort();
+			}
+
+			if (column === 'left') {
+				animateLeftWaiting();
+			} else {
+				animateRightWaiting();
+			}
+
+			// Save the user input to the search variable
+			var search = field.val();
+			console.log('search', search);
+			console.log('counter', counter);
+			// If the search is not empty 
+			if (search.length > 0) {
+				// Run the request stock info from MarkitOnDemand API
+				ajaxInterval = setTimeout(function(){
+					var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/jsonp';
+					ajaxRequests[counter] = $.ajax({
+						data: { 'input': search },
+						url: url,
+						dataType: 'jsonp',
+						success: typeAhead,
+						error: handleError,
+						context: this
+					})
+				}, 500 )
+			// If the search is empty (if the user deleted their search term), do this
+		} else {
+				// Stop the animation
+				clearInterval(leftWaitingInterval);
+				clearInterval(rightWaitingInterval);
+				// Stop any ajax requests that have not yet been sent
+				clearInterval(ajaxInterval);
+				// Stop any ajax requets that have already been sent
+				if (ajaxRequests[counter] !== undefined) {
+					ajaxRequests[counter].abort();
+				}
+				// Reset the button value
+				$('#' + column + '-button').val('search');
+				// Clear the results list
+				$('#' + column + '-type-result').html('');
+			}
+		}
+	});
 });
 
 // Called at .done of Quandl API AJAX request
