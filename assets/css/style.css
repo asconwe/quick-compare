@@ -16,7 +16,6 @@ h3 {
 
 
 .container {
-
 	float:top;
 	text-align:center;
 	width: 1050px;
@@ -30,19 +29,24 @@ h3 {
 	font-size: 35px;
 }
 
-#type-result {
+#right-type-result, #left-type-result {
+	position: absolute;
+	z-index: 100;
+	margin: 0;
+	padding: 0;
+	left: 0;
+	background: white;
 }
 
-.left-result-li, .right-result-li{
+.left-result-li, .right-result-li {
 	font-size: 15pt;
-	border: solid 1px #744;
-	padding: 5px;
+	border: solid 1px #ddd;
+	padding: 0px 5px;
 	list-style: none;
 	font-weight: light;
 	margin: 0;
 	float: left;
 	width: 100%;
-	
 }
 
 .left-result-li:hover, .right-result-li:hover {
@@ -55,4 +59,8 @@ h3 {
 
 .ticker {
 	float: right;
+}
+
+#left-button, #right-button {
+	width: 50px;
 }

@@ -79,16 +79,19 @@ var tickerTwo;
 
 // On form submit, do this
 $('#left-input-form').submit(function(event) {
-	// Clear the typeahead results
-	$('#left-type-result').html('');
-	// Stop the waiting animation interval
-	clearInterval(waitingInterval);
-	// Rest the text of the search button
-	$('#left-button').val('search');
-
-	console.log('submitted');
-	// Prevent default submit behavior
 	event.preventDefault();
+	setTimeout(function(){
+
+		// Clear the typeahead results
+		$('#left-type-result').html('');
+		// Stop the waiting animation interval
+		clearInterval(waitingInterval);
+		// Rest the text of the search button
+		$('#left-button').val('search');
+
+		console.log('submitted');
+		// Prevent default submit behavior
+	}, 20)
 });
 
 // Create a new click handler for the dropdown typeahead results
@@ -99,9 +102,14 @@ function setResultClickHandler() {
 		// Get stock company name from the data-name attribute of the result clicked and populate the search field with it
 		field.val($(this).data('name'));
 		// Set the #left-search data-symbol attribute as the result's data-symbol attribute
-		$('#' + column + '-search').data('symbol', $(this).data('symbol'));
-		// Submit the form
-		$('#left-input-form').submit();
+		if (column = 'left') {
+			tickerOne = $(this).data('symbol');
+			// Submit the form
+			$('#left-input-form').submit();
+		} else {
+			tickerTwo = $(this).data(symbol);
+			$('#right-input-form').submit();
+		}
 	})
 }
 
@@ -168,12 +176,13 @@ field = $('#' + column + '-search');
 // Highlight the result list item at a given index
 function highlightFromList(index) {
 	console.log(index);
-	$('.' + column + '-result-li').css({ 'background':'#311' });
-	$('.' + column + '-result-li').eq(index).css({ 'background': '#422'});
+	$('.' + column + '-result-li').css({ 'background':'#fff' });
+	$('.' + column + '-result-li').eq(index).css({ 'background': '#eee'});
 }
 
 function submitAtIndex(index, column) {
-
+	var stockListItem = $('.' + column + '-result-li');
+	field.val(stockListItem.data('name'));
 }
 
 // When a user types in the search field (key down), do this
@@ -198,7 +207,6 @@ field.keydown(function(e) {
 		}
 		// Highlight the item in the list at the selected index
 		highlightFromList(lIndex, column);
-		
 	}
 });
 
