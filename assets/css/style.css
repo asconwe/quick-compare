@@ -13,8 +13,6 @@ h3 {
 	font-size: 35px;
 }
 
-
-
 .container {
 	float:top;
 	text-align:center;
@@ -29,6 +27,10 @@ h3 {
 	font-size: 35px;
 }
 
+#left-search, #right-search {
+	background-color: #ffffff;
+}
+
 #right-type-result, #left-type-result {
 	position: absolute;
 	z-index: 100;
@@ -40,7 +42,7 @@ h3 {
 
 .left-result-li, .right-result-li {
 	font-size: 15pt;
-	border: solid 1px #ddd;
+	border: solid 1px #eee;
 	padding: 0px 5px;
 	list-style: none;
 	font-weight: light;
@@ -57,10 +59,16 @@ h3 {
 	float: left;
 }
 
-.ticker {
+.exchange {
 	float: right;
+	margin-right: 5px;
+}
+
+.ticker {
+	font-weight: bold;
+	margin-left: 5px;
 }
 
 #left-button, #right-button {
-	width: 50px;
+	display: none;
 }

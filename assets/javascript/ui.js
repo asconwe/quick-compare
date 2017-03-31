@@ -1,3 +1,13 @@
+/*
+X: To do: Improve ajax error handling / find out about current errors
+X: To do: Make arrow key navigation format consistent with hover
+X: To do: Enter key should behave the same as click
+X: To do: On submit, if there is no data-symbol attribute, then search markitondemand api for one before submitting to quandl api
+	Above: resolved by removing the search button entirely
+To do: Divide between left and right searches
+To do: Prevent -1 from pointing to the end of the list
+To do: Get the dates
+*/
 
 var config = {
 	apiKey: "AIzaSyA1ot93Xhw0Iemmof8EeVvGFcDCFaNf4bs",
@@ -9,28 +19,44 @@ var config = {
 
 firebase.initializeApp(config);
 var database = firebase.database();
-var stockObjectOne;
-var stockObjectTwo;
 
-
+// Declare variables
+var leftWaitingInterval;
+var rightWaitingInterval;
+var ajaxInterval;
+var ajaxRequests = [];
+var counter = 0;
+var lIndex = -1;
+var arr = [];
+var field;
+var name;
+var symbol;
+var exchange;
+var tickerOne;
+var tickerTwo;
+var stockObjectOne = {};
+var stockObjectTwo = {};
 
 var submitStockOne = function(){  
 	var stockNameOne = $("#left-search").val().trim(); 
 	var startDateSelectedOne = $("#start-date").val().trim(); 
 	var endDateSelectedOne = $("#end-date").val().trim(); 
+	
+	console.log(startDateSelectedOne);
+	console.log(endDateSelectedOne);
 
-  	    stockObjectOne = { // saves all of those into an object
-  	    	stockName: stockNameOne,
-  	    	tickerOne: tickerOne,
-  	    	startDateSelected: startDateSelectedOne,
-  	    	endDateSelected: endDateSelectedOne
-  	    }
+	stockObjectOne = { // saves all of those into an object
+		stockName: stockNameOne,
+		tickerOne: tickerOne,
+		startDateSelected: startDateSelectedOne,
+		endDateSelected: endDateSelectedOne
+	}
 
-
-  	    database.ref().push(stockObjectOne).then(function(snapshot){
+  database.ref().push(stockObjectOne).then(function(snapshot){
 		localStorage.setItem("user_key_one", snapshot.key); // saves that data in the database.
 	});
-
+	
+	displayStockOne();
 }
 
 var submitStockTwo = function(){
@@ -49,62 +75,48 @@ var submitStockTwo = function(){
 		localStorage.setItem("user_key_two", snapshot.key);
 	});
 
+	displayStockTwo();
 };
 
 
-/*
-To do: Enter key should behave the same as click
-To do: On submit, if there is no data-symbol attribute, then search markitondemand api for one before submitting to quandl api
-To do: Divide between left and right searches
-To do: Make arrow key navigation format consistent with hover
-To do: Prevent -1 from pointing to the end of the list
-To do: Improve ajax error handling / find out about current errors
-*/
 
-///////////////////////
-var column = 'left'; // !! figure out how to set this
-
-// Declare variables
-var leftWaitingInterval;
-var rightWaitingInterval;
-var ajaxInterval;
-var ajaxRequests = [];
-var counter = 0;
-var lIndex = -1;
-var arr = [];
-var field;
-
-// !! assign sybmol to this variable from dropdown & click, dropdown & enter, and submit search
-var tickerOne;
-var tickerTwo;
-
-function submitForm(column) {
-	
+function resetForm(column) {
 	setTimeout(function(){
-
-		// Clear the typeahead results
-		$('#' + column + '-type-result').html('');
 		// Stop the waiting animation interval
 		clearInterval(leftWaitingInterval);
 		clearInterval(rightWaitingInterval);
-		// Rest the text of the search button
+		// Reset the text of the search button
 		$('#' + column + '-button').val('search');
-
+		// Clear the typeahead results
+		$('#' + column + '-type-result').html('');
+		
 		console.log('submitted');
-		// Prevent default submit behavior
 	}, 20)
 	
 }
 
 // On left orm submit, do this
 $('#left-input-form').submit(function(event) {
+	// Prevent default submit behavior
 	event.preventDefault();
-	submitForm('left');
+	// !! Get the dates
+// 	stockObjectOne.startDateSelected = $('#start-date').val();
+// 	stockObjectOne.endDateSelected = $('#end-date').val();
+	// Submit the left form
+	resetForm('left');
+	submitStockOne();
 });
 
 $('#right-input-form').submit(function(event) {
+	console.log('submit', tickerTwo);
+	// Prevent default submit behavior
 	event.preventDefault();
-	submitForm('right');
+	// !! Get the dates
+// 	stockObjectOne.startDateSelected = $('#start-date').val();
+// 	stockObjectOne.endDateSelected = $('#end-date').val();
+	// Submit the right form
+	resetForm('right');
+	submitStockTwo();
 });
 
 // Create a new click handler for the dropdown typeahead results
@@ -117,12 +129,15 @@ function setResultClickHandler() {
 		// Set the #left-search data-symbol attribute as the result's data-symbol attribute
 		if (column === 'left') {
 			tickerOne = $(this).data('symbol');
+			console.log(tickerOne);
 			// Submit the form
 			$('#left-input-form').submit();
 		} else {
 			tickerTwo = $(this).data(symbol);
+			// Submit the form
 			$('#right-input-form').submit();
 		}
+		
 	})
 }
 
@@ -139,7 +154,6 @@ function typeAhead(response) {
 	$('#' + column + '-button').val('search');
 	// Clear previous typeahead results
 	$('#' + column + '-type-result').html('');
-	console.log('starts here', arr);
 	// !! Make sure this if statement useful
 	// If there is something in the response array
 	if (arr !== null) {
@@ -151,15 +165,20 @@ function typeAhead(response) {
 			} else {
 				name = value.Name.slice(0, 20) + '...';
 			}
-			// Truncate the displaye dsymbol if it is longer than 5 characters
+			
+			exchange = value.Exchange;
+			
+			// Truncate the displayed symbol if it is longer than 5 characters
 			if (value.Symbol.length < 6) {
 				symbol = value.Symbol;
 			} else {
 				symbol = value.Symbol.slice(0, 4) + '...';
 			}
 			// Add it to the result dropdown list
-			$('#' + column + '-type-result').append('<li class="' + column + '-result-li" data-name="' + value.Name + '" data-symbol="' + value.Symbol + '"><span class="full-name">' + name + '</span><span class="ticker">' + symbol + '</span><br></li>');
+			$('#' + column + '-type-result').append('<li class="' + column + '-result-li row" data-name="' + value.Name + '" data-symbol="' + value.Symbol + '"><span class="full-name">' + name + '</span><span class="exchange">'  + exchange + ': <span class="ticker">' + symbol + '</span></span></li>');
 		})
+		
+		console.log('CLASS:', $('#left-type-result').attr('class'));
 		// Set a click handler for the results
 		setResultClickHandler();
 	}
@@ -176,14 +195,21 @@ function handleError(error) {
 
 // Highlight the result list item at a given index
 function highlightFromList(index) {
-	console.log(index);
 	$('.' + column + '-result-li').css({ 'background':'#fff' });
 	$('.' + column + '-result-li').eq(index).css({ 'background': '#eee'});
 }
 
 function submitAtIndex(index, column) {
-	var stockListItem = $('.' + column + '-result-li');
+	var stockListItem = $('.' + column + '-result-li').eq(index);
 	field.val(stockListItem.data('name'));
+	if (column === 'left') {
+			tickerOne = stockListItem.data('symbol');
+			// Submit the form
+			$('#left-input-form').submit();
+		} else {
+			tickerTwo = stockListItem.data('symbol');
+			$('#right-input-form').submit();
+		}
 }
 
 function animateLeftWaiting() {
@@ -192,11 +218,7 @@ function animateLeftWaiting() {
 		// Run a waiting/loading animation
 		leftWaitingInterval = setInterval(function(){
 			// !! Make a better, prettier animation
-			if ($('#left-button').val() !== '-') {
-				$('#left-button').val('-');
-			} else {
-				$('#left-button').val(' ');
-			}
+			
 		}, 100);
 }
 
@@ -206,11 +228,7 @@ function animateRightWaiting() {
 		// Run a waiting/loading animation
 		rightWaitingInterval = setInterval(function(){
 			// !! Make a better, prettier animation
-			if ($('#right-button').val() !== '-') {
-				$('#right-button').val('-');
-			} else {
-				$('#right-button').val(' ');
-			}
+			
 		}, 100);
 }
 
@@ -234,24 +252,22 @@ fieldClass.focusin(function() {
 	column = $(this).data('column');
 	field = $('#' + column + '-search');
 	// When a user types in the search field (key down), do this
-	field.on('keydown', function(e) {
-		console.log(field.attr('id'));
-		console.log(e.key);
+	field.on('keydown', function(event) {
 		// If the key is not an up or down arrow key
-		if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown' && e.key !== 'Enter') {
+		if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown' && event.key !== 'Enter') {
 			// Don't run the previously initiated ajax request
 			clearInterval(ajaxInterval);
 		// If the key is an up or down arrow key
 		} else {
 			// Prevent default arrow key behavior (moving the cursor)
-			e.preventDefault();
+			event.preventDefault();
 			// If up key pressed and the Index to highlight is within range
-			if (e.key === 'ArrowUp' && lIndex >= 0) {
+			if (event.key === 'ArrowUp' && lIndex >= 0) {
 				lIndex--;
 			// If down key pressed and the Index to highlight is within range
-			} else if (e.key === 'ArrowDown' && lIndex < arr.length) {
+			} else if (event.key === 'ArrowDown' && lIndex < arr.length) {
 				lIndex++;
-			} else if (e.key === 'Enter' && lIndex >= 0) {
+			} else if (event.key === 'Enter' && lIndex >= 0) {
 				submitAtIndex(lIndex, column);
 			}
 			// Highlight the item in the list at the selected index
@@ -263,8 +279,7 @@ fieldClass.focusin(function() {
 	field.on('keyup', function(e) {
 		// !! change this to be if the key is a letter or number
 		// If the key is not an up or dow narrow
-		if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') {
-
+		if (event.keyCode >= 48 && event.keyCode <= 57 || event.keyCode >= 65 && event.keyCode <= 90 || event.keyCode >= 96 && event.keyCode <= 105) {
 			// Add to the ajax request counter !! Should this be moved to the end of this function?
 			counter++;
 			// Abort any pending ajax request
@@ -280,8 +295,6 @@ fieldClass.focusin(function() {
 
 			// Save the user input to the search variable
 			var search = field.val();
-			console.log('search', search);
-			console.log('counter', counter);
 			// If the search is not empty 
 			if (search.length > 0) {
 				// Run the request stock info from MarkitOnDemand API
@@ -295,7 +308,7 @@ fieldClass.focusin(function() {
 						error: handleError,
 						context: this
 					})
-				}, 500 )
+				}, 700);
 			// If the search is empty (if the user deleted their search term), do this
 		} else {
 				// Stop the animation
@@ -316,8 +329,3 @@ fieldClass.focusin(function() {
 	});
 });
 
-// Called at .done of Quandl API AJAX request
-// Display the stock object in the specified column
-function displayResult(stockObject, column) {
-
-}
