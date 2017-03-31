@@ -1,12 +1,13 @@
 /*
+X: To do: Divide between left and right searches
 X: To do: Improve ajax error handling / find out about current errors
 X: To do: Make arrow key navigation format consistent with hover
 X: To do: Enter key should behave the same as click
 X: To do: On submit, if there is no data-symbol attribute, then search markitondemand api for one before submitting to quandl api
 	Above: resolved by removing the search button entirely
-To do: Divide between left and right searches
 To do: Prevent -1 from pointing to the end of the list
-To do: Get the dates
+To do: Perform validation on the dates
+To do: Add a searching animation
 */
 
 var config = {
