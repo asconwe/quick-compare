@@ -13,10 +13,7 @@ h3 {
 	font-size: 35px;
 }
 
-
-
 .container {
-
 	float:top;
 	text-align:center;
 	width: 1050px;
@@ -30,20 +27,31 @@ h3 {
 	font-size: 35px;
 }
 
-#type-result {
-	
+#left-search, #right-search {
+	background-color: #ffffff;
 }
 
-.result-li {
+#right-type-result, #left-type-result {
+	position: absolute;
+	z-index: 100;
+	margin: 0;
+	padding: 0;
+	left: 0;
+	background: white;
+}
+
+.left-result-li, .right-result-li {
 	font-size: 15pt;
-	border: solid 1px #744;
-	padding: 3px;
+	border: solid 1px #eee;
+	padding: 0px 5px;
 	list-style: none;
 	font-weight: light;
-	
+	margin: 0;
+	float: left;
+	width: 100%;
 }
 
-.result-li:hover {
+.left-result-li:hover, .right-result-li:hover {
 	background: #eee;
 }
 
@@ -51,6 +59,16 @@ h3 {
 	float: left;
 }
 
-.ticker {
+.exchange {
 	float: right;
+	margin-right: 5px;
+}
+
+.ticker {
+	font-weight: bold;
+	margin-left: 5px;
+}
+
+#left-button, #right-button {
+	display: none;
 }
