@@ -1,0 +1,79 @@
+body {
+	background-color: #08253d;
+	background-image: url(background_1.jpg);		
+}
+
+h1 {
+	font-family: 'Bowlby One SC', cursive;
+	font-size: 45px;
+}
+
+h3 {
+	font-family: 'Gurajada', serif;
+	font-size: 35px;
+}
+
+.container {
+	float:top;
+	text-align:center;
+	padding: 100px;
+	background-color: white;
+	padding-top:10px;
+	margin-left:auto;
+	margin-right:auto;
+	font-family: 'Gurajada', serif;
+}
+
+#left-search, #right-search {
+	background-color: #ffffff;
+}
+
+.animation {
+	text-transform: uppercase;
+	margin: 0 0 0 10px;
+	vertical-align: text-top;
+	font-size: 24px;
+	opacity: 0.0;
+}
+
+#right-type-result, #left-type-result {
+	position: absolute;
+	z-index: 100;
+	margin: 0;
+	padding: 0;
+	left: 0;
+	background: white;
+}
+
+.left-result-li, .right-result-li {
+	font-size: 15pt;
+	border: solid 1px #eee;
+	padding: 0px 5px;
+	list-style: none;
+	font-weight: light;
+	margin: 0;
+	float: left;
+	width: 100%;
+}
+
+.left-result-li:hover, .right-result-li:hover {
+	background: #eee;
+}
+
+.full-name {
+	float: left;
+}
+
+.exchange {
+	float: right;
+	margin-right: 5px;
+}
+
+.ticker {
+	font-weight: bold;
+	margin-left: 5px;
+}
+
+#left-button, #right-button {
+	display: none;
+}
