@@ -120,6 +120,31 @@ $('#right-input-form').submit(function(event) {
 	submitStockTwo();
 });
 
+function validateDateStrings(startDate, endDate) {
+	var startDate = Date.parse(startDate);
+	var endDate = Date.parse(endDate);
+	var today = new Date;
+	if (startDate > endDate) {
+		swal({
+			  title: "Uh oh!",
+			  text: "Make sure that your start date is not beyond the end date!",
+			  type: "error",
+			  confirmButtonText: "Cool"
+			});
+		return false;
+	} else if (startDate > today || endDate > today) {
+		swal({
+			  title: "C'mon!",
+			  text: "Predict the future too? That's flattering, but try again!",
+			  type: "error",
+			  confirmButtonText: "Cool"
+			});
+		return false;
+	} else {
+		return true;
+	}
+}
+
 // Create a new click handler for the dropdown typeahead results
 function setResultClickHandler() {
 	// On reult click, do this
