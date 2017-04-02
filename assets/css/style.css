@@ -16,19 +16,24 @@ h3 {
 .container {
 	float:top;
 	text-align:center;
-	width: 1050px;
-	height: 1250px;
 	padding: 100px;
 	background-color: white;
 	padding-top:10px;
 	margin-left:auto;
 	margin-right:auto;
 	font-family: 'Gurajada', serif;
-	font-size: 35px;
 }
 
 #left-search, #right-search {
 	background-color: #ffffff;
+}
+
+.animation {
+	text-transform: uppercase;
+	margin: 0 0 0 10px;
+	vertical-align: text-top;
+	font-size: 24px;
+	opacity: 0.0;
 }
 
 #right-type-result, #left-type-result {

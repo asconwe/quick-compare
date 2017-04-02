@@ -61,6 +61,14 @@ var displayStockTwo = function() {
 // Display the stock object in the specified column
 function displayResult(stockObject, column) {
 	console.log(stockObject, column);
+	var panelName = $('#' + column + '-stock-name');
+	var name = stockObject.name;
+	// if (name.length > 20) {
+	// 	name = name.slice(0, 18) + '...';
+	// } 
+
+	panelName.html(name);
+
 }
 
 

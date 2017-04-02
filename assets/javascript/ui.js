@@ -213,14 +213,23 @@ function submitAtIndex(index, column) {
 		}
 }
 
+function animate(column) {
+	animateSpan = $('#' + column + '-animation');
+	animateSpan.animate({'opacity': 0.5}, 10, function(){
+		animateSpan.animate({'opacity': 0.0}, 550);
+	});
+
+}
+
 function animateLeftWaiting() {
 	// Stop the animation before adding a new interval (otherwise the animation would be running twice)
 		clearInterval(leftWaitingInterval);
+		var i = 0;
 		// Run a waiting/loading animation
-		leftWaitingInterval = setInterval(function(){
+		leftWaitingInterval = setInterval(function() {
 			// !! Make a better, prettier animation
-			
-		}, 100);
+			animate('left');
+		}, 560);
 }
 
 function animateRightWaiting() {
@@ -229,8 +238,8 @@ function animateRightWaiting() {
 		// Run a waiting/loading animation
 		rightWaitingInterval = setInterval(function(){
 			// !! Make a better, prettier animation
-			
-		}, 100);
+			animate('right')
+		}, 560);
 }
 
 // Save jQuery search field object in 'field'
@@ -263,13 +272,17 @@ fieldClass.focusin(function() {
 			// Prevent default arrow key behavior (moving the cursor)
 			event.preventDefault();
 			// If up key pressed and the Index to highlight is within range
-			if (event.key === 'ArrowUp' && lIndex >= 0) {
+			if (event.key === 'ArrowUp' && lIndex > 0) {
 				lIndex--;
 			// If down key pressed and the Index to highlight is within range
 			} else if (event.key === 'ArrowDown' && lIndex < arr.length) {
 				lIndex++;
-			} else if (event.key === 'Enter' && lIndex >= 0) {
-				submitAtIndex(lIndex, column);
+			} else if (event.key === 'Enter') {
+				if (lIndex >= 0) {
+					submitAtIndex(lIndex, column);
+				} else {
+					submitAtIndex(0, column);
+				}
 			}
 			// Highlight the item in the list at the selected index
 			highlightFromList(lIndex, column);
@@ -277,10 +290,10 @@ fieldClass.focusin(function() {
 	});
 
 	// When the user types in the search field (key up), do this
-	field.on('keyup', function(e) {
+	field.on('keyup', function(event) {
 		// !! change this to be if the key is a letter or number
 		// If the key is not an up or dow narrow
-		if (event.keyCode >= 48 && event.keyCode <= 57 || event.keyCode >= 65 && event.keyCode <= 90 || event.keyCode >= 96 && event.keyCode <= 105) {
+		if (event.keyCode >= 48 && event.keyCode <= 57 || event.keyCode >= 65 && event.keyCode <= 90 || event.keyCode >= 96 && event.keyCode <= 105 || event.key === "Backspace") {
 			// Add to the ajax request counter !! Should this be moved to the end of this function?
 			counter++;
 			// Abort any pending ajax request

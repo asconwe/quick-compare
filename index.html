@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>Quick-compare</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
@@ -51,6 +52,7 @@
 						<span class="input-group-btn">
 							<input class="btn btn-default" type="submit" id="left-button" value="Search" />
 						</span>
+						<span id="left-animation" class="animation">searching</span>
 					</form> 
 					<ul class="col-xs-12" id="left-type-result"></ul>
 				</div>
@@ -62,6 +64,7 @@
 						<span class="input-group-btn">
 							<input class="btn btn-default" id="right-button" type="button" value="Search" />
 						</span>
+						<span id="right-animation" class="animation">searching</span>
 					</form><!-- /input-group -->
 					<ul class="col-xs-12" id="right-type-result"></ul>
 				</div><!-- /.col-xs-6 -->
@@ -73,7 +76,7 @@
 			<div class="row2">
 
 
-	<!-THIRD ROW -->
+	<!-- THIRD ROW -->
 
 	<div class="row3">
 
@@ -85,7 +88,7 @@
 
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h3 class="panel-title">Selected Stock #1</h3>
+						<h3 id="left-stock-name">Selected Stock #1</h3>
 					</div>
 					<div class="panel-body">
 						<div class="text-center">
@@ -103,7 +106,7 @@
 
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h3 class="panel-title">Selected Stock #2</h3>
+						<h3 id="right-stock-name">Selected Stock #2</h3>
 					</div>
 					<div class="panel-body">
 						<div class="text-center">
