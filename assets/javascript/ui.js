@@ -43,21 +43,26 @@ var submitStockOne = function(){
 	var startDateSelectedOne = $("#start-date").val().trim(); 
 	var endDateSelectedOne = $("#end-date").val().trim(); 
 	
-	console.log(startDateSelectedOne);
-	console.log(endDateSelectedOne);
+	if (validateDateStrings(startDateSelectedOne, endDateSelectedOne)) {
+		console.log('validated');
+		console.log(startDateSelectedOne);
+		console.log(endDateSelectedOne);
 
-	stockObjectOne = { // saves all of those into an object
-		stockName: stockNameOne,
-		tickerOne: tickerOne,
-		startDateSelected: startDateSelectedOne,
-		endDateSelected: endDateSelectedOne
+		stockObjectOne = { // saves all of those into an object
+			stockName: stockNameOne,
+			tickerOne: tickerOne,
+			startDateSelected: startDateSelectedOne,
+			endDateSelected: endDateSelectedOne
+		}
+
+	  	database.ref().push(stockObjectOne).then(function(snapshot){
+			localStorage.setItem("user_key_one", snapshot.key); // saves that data in the database.
+		});
+		
+		displayStockOne();
+	} else {
+		console.log('not valid');
 	}
-
-  database.ref().push(stockObjectOne).then(function(snapshot){
-		localStorage.setItem("user_key_one", snapshot.key); // saves that data in the database.
-	});
-	
-	displayStockOne();
 }
 
 var submitStockTwo = function(){
@@ -79,7 +84,30 @@ var submitStockTwo = function(){
 	displayStockTwo();
 };
 
+function objection(type, str) {
+	$('body').append('<div id="' + type + '" class="objection"></div>');
+	$('#' + type).append('<p>' + str + '</p>');
+	$('#' + type).append('<button id="' + type + '-button" class="btn btn-default"></button>');
+	$('#' + type + '-button').html('Okay');
+	$('#' + type + '-button').click(function(){
+		$('#' + type).remove();
+	});
+}
 
+function validateDateStrings(startDate, endDate) {
+	var startDate = Date.parse(startDate);
+	var endDate = Date.parse(endDate);
+	var today = new Date;
+	if (startDate > endDate) {
+		objection('order', 'Your end-date must come after your start-date');
+		return false;
+	} else if (startDate > today || endDate > today) {
+		objection('future', 'You can\'t pick a date in the future');
+		return false;
+	} else {
+		return true;
+	}
+}
 
 function resetForm(column) {
 	setTimeout(function(){
@@ -90,35 +118,11 @@ function resetForm(column) {
 		$('#' + column + '-button').val('search');
 		// Clear the typeahead results
 		$('#' + column + '-type-result').html('');
-		
 		console.log('submitted');
 	}, 20)
 	
 }
 
-// On left orm submit, do this
-$('#left-input-form').submit(function(event) {
-	// Prevent default submit behavior
-	event.preventDefault();
-	// !! Get the dates
-// 	stockObjectOne.startDateSelected = $('#start-date').val();
-// 	stockObjectOne.endDateSelected = $('#end-date').val();
-	// Submit the left form
-	resetForm('left');
-	submitStockOne();
-});
-
-$('#right-input-form').submit(function(event) {
-	console.log('submit', tickerTwo);
-	// Prevent default submit behavior
-	event.preventDefault();
-	// !! Get the dates
-// 	stockObjectOne.startDateSelected = $('#start-date').val();
-// 	stockObjectOne.endDateSelected = $('#end-date').val();
-	// Submit the right form
-	resetForm('right');
-	submitStockTwo();
-});
 
 // Create a new click handler for the dropdown typeahead results
 function setResultClickHandler() {
@@ -343,3 +347,20 @@ fieldClass.focusin(function() {
 	});
 });
 
+// On left orm submit, do this
+$('#left-input-form').submit(function(event) {
+	// Prevent default submit behavior
+	event.preventDefault();
+	// Submit the left form
+	resetForm('left');
+	submitStockOne();
+});
+
+$('#right-input-form').submit(function(event) {
+	console.log('submit', tickerTwo);
+	// Prevent default submit behavior
+	event.preventDefault();
+	// Submit the right form
+	resetForm('right');
+	submitStockTwo();
+});

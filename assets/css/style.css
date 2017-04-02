@@ -24,6 +24,18 @@ h3 {
 	font-family: 'Gurajada', serif;
 }
 
+.date {
+	margin: 10px 0;
+}
+
+.date>.input-group {
+	width: 100%;
+}
+
+.company>.input-group {
+	width: 100%;
+}
+
 #left-search, #right-search {
 	background-color: #ffffff;
 }
@@ -76,4 +88,19 @@ h3 {
 
 #left-button, #right-button {
 	display: none;
+}
+
+.objection {
+	position: fixed;
+	left: 50%;
+	margin-left: -200px;
+	width: 400px;
+	text-align: center;
+	padding: 20px 50px;
+	background: white;
+	border: solid 1px grey;
+	border-radius: 15px;
+	color: black;
+	top: 200px;
+	z-index: 500;
 }
