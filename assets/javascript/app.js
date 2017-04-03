@@ -26,13 +26,15 @@ var endSender = function(arr) { // cute little function that grabs the first ite
 }
 
 var displayStockOne = function() {
+	console.log(makeQueryURLOne());
 	$.ajax({
 		url: makeQueryURLOne(),
 		method: "GET"
 	}).done(function(response){
 		var stockResultOne= {} // creates an object that will give FE the name, date array, starte date, end date
 		var data = response.dataset;
-		stockResultOne.name = data.name; //user dot notation to create the object.
+		stockResultOne.name = stockNameOne; //user dot notation to create the object.
+		stockResultOne.ticker = tickerOne;
 		stockResultOne.dateArray = data.data;
 		stockResultOne.startDate = startSender(data.data);
 		stockResultOne.endDate = endSender(data.data);
@@ -43,13 +45,15 @@ var displayStockOne = function() {
 
 
 var displayStockTwo = function() {
+	console.log(makeQueryURLTwo());
 	$.ajax({
 		url: makeQueryURLTwo(),
 		method: "GET"
 	}).done(function(response){
 		var stockResultTwo= {} // creates an object that will give FE the name, date array, starte date, end date
 		var data = response.dataset;
-		stockResultTwo.name = data.name; //users dot notation to create the object.
+		stockResultTwo.name = stockNameTwo //users dot notation to create the object.
+		stockResultTwo.ticker = tickerTwo;
 		stockResultTwo.dateArray = data.data;
 		stockResultTwo.startDate = startSender(data.data);
 		stockResultTwo.endDate = endSender(data.data);
@@ -61,6 +65,22 @@ var displayStockTwo = function() {
 // Display the stock object in the specified column
 function displayResult(stockObject, column) {
 	console.log(stockObject, column);
+	var panelTicker = $('#' + column + '-stock-ticker');
+	var panelName = $('#' + column + '-stock-name');
+	var panelValues = $('#' + column + '-stock-values');
+	var ticker = stockObject.ticker;
+	var name = stockObject.name;
+	var valueArray = stockObject.dateArray;
+	// if (name.length > 20) {
+	// 	name = name.slice(0, 18) + '...';
+	// } 
+
+	panelTicker.html(ticker);
+	panelName.html(name)
+	valueArray.forEach(function(value){
+		console.log(value);
+		panelValues.append('<li class="row"><span class="liDate">' + value[0] + '</span><span class="liValue">$' + value[1] + '</span></li>')
+	});
 }
 
 

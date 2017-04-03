@@ -16,19 +16,41 @@ h3 {
 .container {
 	float:top;
 	text-align:center;
-	width: 1050px;
-	height: 1250px;
 	padding: 100px;
 	background-color: white;
 	padding-top:10px;
 	margin-left:auto;
 	margin-right:auto;
 	font-family: 'Gurajada', serif;
-	font-size: 35px;
+}
+
+.date {
+	margin: 10px 0;
+}
+
+.date>.input-group {
+	width: 100%;
+}
+
+.company>.row {
+	position: relative;
 }
 
 #left-search, #right-search {
 	background-color: #ffffff;
+	border-radius: 0;
+}
+
+.animation {
+	text-transform: uppercase;
+	margin-right: auto;
+	margin-left: auto;
+	right: 15px;
+	font-size: 24px;
+	opacity: 0.0;
+	position: absolute;
+	z-index: 600;
+	top: 30px;
 }
 
 #right-type-result, #left-type-result {
@@ -71,4 +93,27 @@ h3 {
 
 #left-button, #right-button {
 	display: none;
+}
+
+ul.values {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.values>li {
+	border: 1px solid #eee;
+	font-size: 1.5em;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+#left-stock-values>li>.liValue {
+	float: right;
+	width: 100px;
+}
+
+#right-stock-values>li>.liValue{
+	float: left;
+	width: 100px;
 }

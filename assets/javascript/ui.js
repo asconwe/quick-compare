@@ -35,51 +35,59 @@ var symbol;
 var exchange;
 var tickerOne;
 var tickerTwo;
+var stockNameOne; 
+var stockNameTwo;
 var stockObjectOne = {};
 var stockObjectTwo = {};
+var today = new Date;
 
 var submitStockOne = function(){  
-	var stockNameOne = $("#left-search").val().trim(); 
 	var startDateSelectedOne = $("#start-date").val().trim(); 
 	var endDateSelectedOne = $("#end-date").val().trim(); 
 	
-	console.log(startDateSelectedOne);
-	console.log(endDateSelectedOne);
+	if (validateDateStrings(startDateSelectedOne, endDateSelectedOne)) {
+		console.log('validated');
+		console.log(startDateSelectedOne);
+		console.log(endDateSelectedOne);
 
-	stockObjectOne = { // saves all of those into an object
-		stockName: stockNameOne,
-		tickerOne: tickerOne,
-		startDateSelected: startDateSelectedOne,
-		endDateSelected: endDateSelectedOne
+		stockObjectOne = { // saves all of those into an object
+			stockName: stockNameOne,
+			tickerOne: tickerOne,
+			startDateSelected: startDateSelectedOne,
+			endDateSelected: endDateSelectedOne
+		}
+
+	  	database.ref().push(stockObjectOne).then(function(snapshot){
+			localStorage.setItem("user_key_one", snapshot.key); // saves that data in the database.
+		});
+		
+		displayStockOne();
+	} else {
+		console.log('not valid');
 	}
-
-  database.ref().push(stockObjectOne).then(function(snapshot){
-		localStorage.setItem("user_key_one", snapshot.key); // saves that data in the database.
-	});
-	
-	displayStockOne();
 }
 
 var submitStockTwo = function(){
-	var stockNameTwo = $("#right-search").val().trim();
 	var startDateSelectedTwo = $("#start-date").val().trim();
 	var endDateSelectedTwo = $("#end-date").val().trim();
 
-	stockObjectTwo = {
-		stockName: stockNameTwo,
-		tickerTwo: tickerTwo,
-		startDateSelected: startDateSelectedTwo,
-		endDateSelected: endDateSelectedTwo
+	if (validateDateStrings(startDateSelectedTwo, endDateSelectedTwo)) {
+		stockObjectTwo = {
+			stockName: stockNameTwo,
+			tickerTwo: tickerTwo,
+			startDateSelected: startDateSelectedTwo,
+			endDateSelected: endDateSelectedTwo
+		}
+
+		database.ref().push(stockObjectTwo).then(function(snapshot){
+			localStorage.setItem("user_key_two", snapshot.key);
+		});
+
+		displayStockTwo();
+	}else {
+		console.log('not valid');
 	}
-
-	database.ref().push(stockObjectTwo).then(function(snapshot){
-		localStorage.setItem("user_key_two", snapshot.key);
-	});
-
-	displayStockTwo();
 };
-
-
 
 function resetForm(column) {
 	setTimeout(function(){
@@ -90,35 +98,35 @@ function resetForm(column) {
 		$('#' + column + '-button').val('search');
 		// Clear the typeahead results
 		$('#' + column + '-type-result').html('');
-		
 		console.log('submitted');
 	}, 20)
 	
 }
 
-// On left orm submit, do this
-$('#left-input-form').submit(function(event) {
-	// Prevent default submit behavior
-	event.preventDefault();
-	// !! Get the dates
-// 	stockObjectOne.startDateSelected = $('#start-date').val();
-// 	stockObjectOne.endDateSelected = $('#end-date').val();
-	// Submit the left form
-	resetForm('left');
-	submitStockOne();
-});
 
-$('#right-input-form').submit(function(event) {
-	console.log('submit', tickerTwo);
-	// Prevent default submit behavior
-	event.preventDefault();
-	// !! Get the dates
-// 	stockObjectOne.startDateSelected = $('#start-date').val();
-// 	stockObjectOne.endDateSelected = $('#end-date').val();
-	// Submit the right form
-	resetForm('right');
-	submitStockTwo();
-});
+function validateDateStrings(startDate, endDate) {
+	var startDate = Date.parse(startDate);
+	var endDate = Date.parse(endDate);
+	if (startDate > endDate) {
+		swal({
+			  title: "Uh oh!",
+			  text: "Make sure that your start date is not beyond the end date!",
+			  type: "error",
+			  confirmButtonText: "Cool"
+			});
+		return false;
+	} else if (startDate > today || endDate > today) {
+		swal({
+			  title: "C'mon!",
+			  text: "Predict the future too? That's flattering, but try again!",
+			  type: "error",
+			  confirmButtonText: "Cool"
+			});
+		return false;
+	} else {
+		return true;
+	}
+}
 
 // Create a new click handler for the dropdown typeahead results
 function setResultClickHandler() {
@@ -205,22 +213,31 @@ function submitAtIndex(index, column) {
 	field.val(stockListItem.data('name'));
 	if (column === 'left') {
 			tickerOne = stockListItem.data('symbol');
+			stockNameOne = stockListItem.data('name');
 			// Submit the form
 			$('#left-input-form').submit();
 		} else {
 			tickerTwo = stockListItem.data('symbol');
+			stockNameTwo = stockListItem.data('symbol');
 			$('#right-input-form').submit();
 		}
+}
+
+function animate(column) {
+	animateSpan = $('#' + column + '-animation');
+	animateSpan.animate({'opacity': 0.5}, 10, function(){
+		animateSpan.animate({'opacity': 0.0}, 550);
+	});
+
 }
 
 function animateLeftWaiting() {
 	// Stop the animation before adding a new interval (otherwise the animation would be running twice)
 		clearInterval(leftWaitingInterval);
 		// Run a waiting/loading animation
-		leftWaitingInterval = setInterval(function(){
-			// !! Make a better, prettier animation
-			
-		}, 100);
+		leftWaitingInterval = setInterval(function() {
+			animate('left');
+		}, 560);
 }
 
 function animateRightWaiting() {
@@ -228,9 +245,8 @@ function animateRightWaiting() {
 		clearInterval(rightWaitingInterval);
 		// Run a waiting/loading animation
 		rightWaitingInterval = setInterval(function(){
-			// !! Make a better, prettier animation
-			
-		}, 100);
+			animate('right')
+		}, 560);
 }
 
 // Save jQuery search field object in 'field'
@@ -252,6 +268,32 @@ fieldClass.blur(function() {
 fieldClass.focusin(function() {
 	column = $(this).data('column');
 	field = $('#' + column + '-search');
+	if (field.val().length > 0) {
+		if (column === 'left') {
+			animateLeftWaiting();
+		} else {
+			animateRightWaiting();
+		}
+
+		// Save the user input to the search variable
+		var search = field.val();
+		// If the search is not empty 
+		if (search.length > 0) {
+			// Run the request stock info from MarkitOnDemand API
+			ajaxInterval = setTimeout(function(){
+				var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/jsonp';
+				ajaxRequests[counter] = $.ajax({
+					data: { 'input': search },
+					url: url,
+					dataType: 'jsonp',
+					success: typeAhead,
+					error: handleError,
+					context: this
+				})
+			}, 700);
+		}
+	}
+
 	// When a user types in the search field (key down), do this
 	field.on('keydown', function(event) {
 		// If the key is not an up or down arrow key
@@ -263,13 +305,17 @@ fieldClass.focusin(function() {
 			// Prevent default arrow key behavior (moving the cursor)
 			event.preventDefault();
 			// If up key pressed and the Index to highlight is within range
-			if (event.key === 'ArrowUp' && lIndex >= 0) {
+			if (event.key === 'ArrowUp' && lIndex > 0) {
 				lIndex--;
 			// If down key pressed and the Index to highlight is within range
 			} else if (event.key === 'ArrowDown' && lIndex < arr.length) {
 				lIndex++;
-			} else if (event.key === 'Enter' && lIndex >= 0) {
-				submitAtIndex(lIndex, column);
+			} else if (event.key === 'Enter') {
+				if (lIndex >= 0) {
+					submitAtIndex(lIndex, column);
+				} else {
+					submitAtIndex(0, column);
+				}
 			}
 			// Highlight the item in the list at the selected index
 			highlightFromList(lIndex, column);
@@ -277,11 +323,10 @@ fieldClass.focusin(function() {
 	});
 
 	// When the user types in the search field (key up), do this
-	field.on('keyup', function(e) {
-		// !! change this to be if the key is a letter or number
-		// If the key is not an up or dow narrow
-		if (event.keyCode >= 48 && event.keyCode <= 57 || event.keyCode >= 65 && event.keyCode <= 90 || event.keyCode >= 96 && event.keyCode <= 105) {
-			// Add to the ajax request counter !! Should this be moved to the end of this function?
+	field.on('keyup', function(event) {
+		// If the key is a letter or number
+		if (event.keyCode >= 48 && event.keyCode <= 57 || event.keyCode >= 65 && event.keyCode <= 90 || event.keyCode >= 96 && event.keyCode <= 105 || event.key === "Backspace") {
+			// Add to the ajax request counter
 			counter++;
 			// Abort any pending ajax request
 			if (ajaxRequests[counter - 1] !== undefined) {
@@ -311,7 +356,7 @@ fieldClass.focusin(function() {
 					})
 				}, 700);
 			// If the search is empty (if the user deleted their search term), do this
-		} else {
+			} else {
 				// Stop the animation
 				clearInterval(leftWaitingInterval);
 				clearInterval(rightWaitingInterval);
@@ -329,4 +374,28 @@ fieldClass.focusin(function() {
 		}
 	});
 });
+
+// On left orm submit, do this
+$('#left-input-form').submit(function(event) {
+	// Prevent default submit behavior
+	event.preventDefault();
+	// Submit the left form
+	resetForm('left');
+	submitStockOne();
+});
+
+$('#right-input-form').submit(function(event) {
+	console.log('submit', tickerTwo);
+	// Prevent default submit behavior
+	event.preventDefault();
+	// Submit the right form
+	resetForm('right');
+	submitStockTwo();
+});
+
+$('#start-date').val('2017-03-01');
+date = today.toISOString().split('T')[0];
+console.log(date);
+$('#end-date').val(date);
+
 

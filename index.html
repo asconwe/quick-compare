@@ -2,11 +2,14 @@
 <html>
 <head>
 	<title>Quick-compare</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 	<script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js"></script>
 	<link rel="stylesheet" href="assets/css/style.css">
+	<script src="assets/sweetalert-master/dist/sweetalert.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="assets/sweetalert-master/dist/sweetalert.css">
 	<link href="https://fonts.googleapis.com/css?family=Bowlby+One+SC|Gurajada" rel="stylesheet">
 </head>
 <body>
@@ -23,45 +26,60 @@
 			</div> 
 
 			<!-- FIRST ROW -->
-				<!-- DATE PICKER -->
+			<!-- DATE PICKER -->
 
-				<div class='col-md-6'>
-					<div class="form-group">
-						<div class='input-group date' id='datetimepicker6'>
-							<input type='date' id="start-date" placeholder="Start Date..." class="form-control" />
+<!-- <<<<<<< HEAD -->
+			<!-- FIRST ROW -->
+			<div class="row1">
+				<!-- DATE PICKER -->
+				<div class='col-sm-4'>
+				</div>
+				<div class='col-sm-4'>
+					<div class="row1">
+						<div class="form-group date">
+							<div class='input-group'>
+								<label for="start-date">Search Start Date</label>
+								<input type='date' id="start-date" placeholder="Start Date..." class="form-control" />
+							</div>
+						</div>
+						<div class="form-group date">
+							<div class="input-group">
+								<label for="end-date">Search End Date</label>
+								<input type="date" id="end-date" class="form-control" placeholder="Start Date" />    
+							</div>
+
 						</div>
 					</div>
 				</div>
-
-				<div class='col-md-6'>
-					<div class="form-group">
-						<div class='input-group date' id='datetimepicker7'>
-							<input type='date' id="end-date" placeholder="End Date..." class="form-control" />
-						</div>
-					</div>
+				<div class='col-md-4'>
 				</div>
 			</div>
 			<!-- TOP LEFT SEARCH SECTION-->
 			<div class="row1">
 
 				<!-- TOP LEFT SEARCH FIELD -->
-				<div class="col-xs-6">
-					<form class="input-group row" id="left-input-form">
-						<input type="text" class="form-control search" id="left-search" placeholder="Search for..." data-column="left" autocomplete="off">
+				<div class="col-xs-6 company">
+					<form class="row" id="left-input-form">
+						<label for="left-search">Stock Search</label>
+						<input type="text" class="form-control search" id="left-search" placeholder="Search for..." data-column="left" autocomplete="off"> 
 						<span class="input-group-btn">
 							<input class="btn btn-default" type="submit" id="left-button" value="Search" />
 						</span>
+						<span id="left-animation" class="animation">searching</span>
+
 					</form> 
 					<ul class="col-xs-12" id="left-type-result"></ul>
 				</div>
 
 				<!-- TOP RIGHT SEARCH FIELD-->
-				<div class="col-xs-6">
-					<form class="input-group row" id="right-input-form">
+				<div class="col-xs-6 company">
+					<form class="row" id="right-input-form">
+						<label for="right-search">Stock Search</label>
 						<input type="text" class="form-control search" id="right-search" placeholder="Search for..." data-column="right" autocomplete="off">
 						<span class="input-group-btn">
 							<input class="btn btn-default" id="right-button" type="button" value="Search" />
 						</span>
+						<span id="right-animation" class="animation">searching</span>
 					</form><!-- /input-group -->
 					<ul class="col-xs-12" id="right-type-result"></ul>
 				</div><!-- /.col-xs-6 -->
@@ -73,95 +91,97 @@
 			<div class="row2">
 
 
-	<!-THIRD ROW -->
+				<!-- THIRD ROW -->
 
-	<div class="row3">
+				<div class="row3">
 
 
-		<!-- LEFT PANEL DISPLAY -->
-		<div class="col-xs-6">
-			
-			<div class="row">
+					<!-- <!-- LEFT PANEL DISPLAY 
+					<div class="col-xs-6">
 
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">Selected Stock #1</h3>
+						<div class="row">
+
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 id="left-stock-name">Selected Stock #1</h3>
+								</div>
+								<div class="panel-body">
+									<div class="text-center">
+
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-					<div class="panel-body">
-						<div class="text-center">
 
+					RIGHT PANEL DISPLAY
+					<div class="col-xs-6">
+
+						<div class="row">
+
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 id="right-stock-name">Selected Stock #2</h3>
+								</div>
+								<div class="panel-body">
+									<div class="text-center">
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> -->
+
+
+				<!--FOURTH ROW-->
+				<div class="row4">
+
+					<!-- LEFT PANEL RESULTS DISPLAY -->
+					<div class="col-xs-6">
+
+						<div class="row">
+
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 id="left-stock-ticker" class="panel-title">Stock #1 Results Display</h3>
+								<p id="left-stock-name"></p>
+								</div>
+								<div class="panel-body">
+									<ul class="values" id="left-stock-values">
+
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- RIGHT PANEL RESULTS DISPLAY -->
+					<div class="col-xs-6">
+
+						<div class="row">
+
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 id="right-stock-ticker" class="panel-title">Stock #2 Results Display</h3>
+									<p id="right-stock-name"></p>
+								</div>
+								<div class="panel-body">
+									<ul class="values" id="right-stock-values">
+
+									</ul>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
+
 			</div>
-		</div>
-
-		<!-- RIGHT PANEL DISPLAY -->
-		<div class="col-xs-6">
-
-			<div class="row">
-
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">Selected Stock #2</h3>
-					</div>
-					<div class="panel-body">
-						<div class="text-center">
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 
 
-	<!--FOURTH ROW-->
-	<div class="row4">
+		</div>	
 
-		<!-- LEFT PANEL RESULTS DISPLAY -->
-		<div class="col-xs-6">
-
-			<div class="row">
-
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">Stock #1 Results Display</h3>
-					</div>
-					<div class="panel-body">
-						<div class="text-center">
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- RIGHT PANEL RESULTS DISPLAY -->
-		<div class="col-xs-6">
-
-			<div class="row">
-
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">Stock #2 Results Display</h3>
-					</div>
-					<div class="panel-body">
-						<div class="text-center">
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-</div>
-
-
-</div>	
-
-<script type="text/javascript", src="assets/javascript/app.js"></script>
-<script type="text/javascript", src="assets/javascript/ui.js"></script>
-</body>
-</html> -->
+		<script type="text/javascript", src="assets/javascript/app.js"></script>
+		<script type="text/javascript", src="assets/javascript/ui.js"></script>
+	</body>
+	</html>
