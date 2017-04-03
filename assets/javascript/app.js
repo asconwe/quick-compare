@@ -2,24 +2,26 @@ var firstArr = [];
 var secondArr = [];
 var nameOne = ' ';
 var nameTwo = ' ';
-var minimum = 99999999;
-// var maximum = 0;
 
 
-var makeQueryURLOne = function() {
+var makeQueryURLOne = function(stockObjectOne) {
+
 	var startDate = stockObjectOne.startDateSelected;
 	var endDate = stockObjectOne.endDateSelected;
+	var exchangeOne = stockObjectOne.exchange;
 	var tickerSymbolOne = stockObjectOne.tickerOne;
-	var queryURLOne = "https://www.quandl.com/api/v3/datasets/WIKI/" + tickerSymbolOne + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
+	var queryURLOne = "https://www.quandl.com/api/v3/datasets/GOOG/" + exchangeOne + "_"+ tickerSymbolOne + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
 	return queryURLOne; 
 
 }
 
-var makeQueryURLTwo = function() {
-	var tickerSymbolTwo = stockObjectTwo.tickerTwo;
+var makeQueryURLTwo = function(stockObjectTwo) {
 	var startDate = stockObjectTwo.startDateSelected;
 	var endDate = stockObjectTwo.endDateSelected;
-	var queryURLTwo = "https://www.quandl.com/api/v3/datasets/WIKI/" + tickerSymbolTwo + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
+	var tickerSymbolTwo = stockObjectTwo.tickerTwo;
+	var exchangeTwo = stockObjectTwo.exchange;
+	var queryURLTwo = "https://www.quandl.com/api/v3/datasets/GOOG/"+ exchangeTwo + "_" + tickerSymbolTwo + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
+
 	return queryURLTwo;
 }
 
@@ -35,11 +37,6 @@ var endSender = function(arr) { // cute little function that grabs the first ite
 
 function createChart(stock, column) {
 	stock.dateArray.forEach(function(value, index){
-		console.log(value[1]<minimum);
-		if (value[1] < minimum) {
-			minimum = value[1];
-		}
-
 		if (column === 'left') {
 			firstArr[index] = {x: new Date(value[0]), y: value[1]};
 			nameOne = stock.name;
@@ -50,7 +47,7 @@ function createChart(stock, column) {
 	});
 	var chart = new CanvasJS.Chart("chartContainer", {
 		title: {
-			text: 'Value change',
+			text: 'Stock values over time',
 			fontSize: 10
 		},
 		animationEnabled: true,
@@ -66,7 +63,6 @@ function createChart(stock, column) {
 		axisY: {
 			gridColor: "Silver",
 			tickColor: "silver",
-			minimum: minimum
 		},
 		legend: {
 			verticalAlign: "center",
@@ -110,16 +106,16 @@ function createChart(stock, column) {
 	chart.render();
 }
 
-var displayStockOne = function() {
-	console.log(makeQueryURLOne());
+var displayStockOne = function(stockObjectOne) {
+	console.log(makeQueryURLOne(stockObjectOne));
 	$.ajax({
-		url: makeQueryURLOne(),
+		url: makeQueryURLOne(stockObjectOne),
 		method: "GET"
 	}).done(function(response){
 		var stockResultOne= {} // creates an object that will give FE the name, date array, starte date, end date
 		var data = response.dataset;
-		stockResultOne.name = stockNameOne; //user dot notation to create the object.
-		stockResultOne.ticker = tickerOne;
+		stockResultOne.name = stockObjectOne.stockName; //user dot notation to create the object.
+		stockResultOne.ticker = stockObjectOne.tickerOne;
 		stockResultOne.dateArray = data.data;
 		stockResultOne.startDate = startSender(data.data);
 		stockResultOne.endDate = endSender(data.data);
@@ -129,16 +125,16 @@ var displayStockOne = function() {
 }
 
 
-var displayStockTwo = function() {
-	console.log(makeQueryURLTwo());
+var displayStockTwo = function(stockObjectTwo) {
+	console.log(makeQueryURLTwo(stockObjectTwo));
 	$.ajax({
-		url: makeQueryURLTwo(),
+		url: makeQueryURLTwo(stockObjectTwo),
 		method: "GET"
 	}).done(function(response){
 		var stockResultTwo= {} // creates an object that will give FE the name, date array, starte date, end date
 		var data = response.dataset;
-		stockResultTwo.name = stockNameTwo //users dot notation to create the object.
-		stockResultTwo.ticker = tickerTwo;
+		stockResultTwo.name = stockObjectTwo.stockName //users dot notation to create the object.
+		stockResultTwo.ticker = stockObjectTwo.tickerTwo;
 		stockResultTwo.dateArray = data.data;
 		stockResultTwo.startDate = startSender(data.data);
 		stockResultTwo.endDate = endSender(data.data);
@@ -151,16 +147,16 @@ var displayStockTwo = function() {
 function displayResult(stockObject, column) {
 	console.log(stockObject, column);
 	var panelTicker = $('#' + column + '-stock-ticker');
-	var panelName = $('#' + column + '-stock-name');
+	var panelExchange = $('#' + column + '-stock-exchange');
 	var panelValues = $('#' + column + '-stock-values');
 	var ticker = stockObject.ticker;
-	var name = stockObject.name;
+	var exchange = stockObject.exchange;
 	var valueArray = stockObject.dateArray;
 
 	createChart(stockObject, column);
 	
 	panelTicker.html(ticker);
-	panelName.html(name)
+	panelExchange.html(exchange);
 	// valueArray.forEach(function(value){
 	// 	console.log(value);
 	// 	panelValues.append('<li class="row"><span class="liDate">' + value[0] + '</span><span class="liValue">$' + value[1] + '</span></li>')
