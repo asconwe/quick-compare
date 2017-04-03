@@ -46,9 +46,6 @@ var submitStockOne = function(){
 	var endDateSelectedOne = $("#end-date").val().trim(); 
 	
 	if (validateDateStrings(startDateSelectedOne, endDateSelectedOne)) {
-		console.log('validated');
-		console.log(startDateSelectedOne);
-		console.log(endDateSelectedOne);
 
 		stockObjectOne = { // saves all of those into an object
 			stockName: stockNameOne,
@@ -69,16 +66,18 @@ var submitStockOne = function(){
 }
 
 var submitStockTwo = function(){
-	var startDateSelectedTwo = $("#start-date").val().trim();
-	var endDateSelectedTwo = $("#end-date").val().trim();
-
-	if (validateDateStrings(startDateSelectedTwo, endDateSelectedTwo)) {
+	var startDateSelectedOne = $("#start-date").val().trim(); 
+	var endDateSelectedOne = $("#end-date").val().trim(); 
+	console.log(startDateSelectedOne);
+	console.log(endDateSelectedOne);
+	
+	if (validateDateStrings(startDateSelectedOne, endDateSelectedOne)) {
 		stockObjectTwo = {
 			stockName: stockNameTwo,
 			tickerTwo: tickerTwo,
 			exchange: exchange,
-			startDateSelected: startDateSelectedTwo,
-			endDateSelected: endDateSelectedTwo
+			startDateSelected: startDateSelectedOne,
+			endDateSelected: endDateSelectedOne
 		}
 
 		database.ref().push(stockObjectTwo).then(function(snapshot){
@@ -171,23 +170,25 @@ function typeAhead(response) {
 	if (arr !== null) {
 		// For each result in response array
 		arr.forEach(function(value, index) {
-			// Truncate the displayed name if it is longer than 21 character
-			if (value.Name.length < 22) {
-				name = value.Name;
-			} else {
-				name = value.Name.slice(0, 20) + '...';
+			if (value.Exchange[0] !== 'B') {
+				// Truncate the displayed name if it is longer than 21 character
+				if (value.Name.length < 22) {
+					name = value.Name;
+				} else {
+					name = value.Name.slice(0, 20) + '...';
+				}
+				
+				exchange = value.Exchange;
+				
+				// Truncate the displayed symbol if it is longer than 5 characters
+				if (value.Symbol.length < 6) {
+					symbol = value.Symbol;
+				} else {
+					symbol = value.Symbol.slice(0, 4) + '...';
+				}
+				// Add it to the result dropdown list
+				$('#' + column + '-type-result').append('<li class="' + column + '-result-li row" data-name="' + value.Name + '" data-symbol="' + value.Symbol + '" data-exchange="' + value.Exchange + '"><span class="full-name">' + name + '</span><span class="exchange">'  + exchange + ': <span class="ticker">' + symbol + '</span></span></li>');
 			}
-			
-			exchange = value.Exchange;
-			
-			// Truncate the displayed symbol if it is longer than 5 characters
-			if (value.Symbol.length < 6) {
-				symbol = value.Symbol;
-			} else {
-				symbol = value.Symbol.slice(0, 4) + '...';
-			}
-			// Add it to the result dropdown list
-			$('#' + column + '-type-result').append('<li class="' + column + '-result-li row" data-name="' + value.Name + '" data-symbol="' + value.Symbol + '" data-exchange="' + value.Exchange + '"><span class="full-name">' + name + '</span><span class="exchange">'  + exchange + ': <span class="ticker">' + symbol + '</span></span></li>');
 		})
 		
 		console.log('CLASS:', $('#left-type-result').attr('class'));

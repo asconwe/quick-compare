@@ -18,8 +18,8 @@ var makeQueryURLOne = function() {
 }
 
 var makeQueryURLTwo = function() {
-	var startDate = stockObjectOne.startDateSelected;
-	var endDate = stockObjectOne.endDateSelected;
+	var startDate = stockObjectTwo.startDateSelected;
+	var endDate = stockObjectTwo.endDateSelected;
 	var tickerSymbolTwo = stockObjectTwo.tickerTwo;
 	var exchangeTwo = stockObjectTwo.exchange;
 	var queryURLTwo = "https://www.quandl.com/api/v3/datasets/GOOG/"+ exchangeTwo + "_" + tickerSymbolTwo + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
