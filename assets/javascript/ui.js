@@ -218,7 +218,7 @@ function submitAtIndex(index, column) {
 			$('#left-input-form').submit();
 		} else {
 			tickerTwo = stockListItem.data('symbol');
-			stockNameTwo = stockListItem.data('symbol');
+			stockNameTwo = stockListItem.data('name');
 			$('#right-input-form').submit();
 		}
 }
@@ -254,6 +254,14 @@ fieldClass = $('.search');
 
 // On search field blur, do this
 fieldClass.blur(function() {
+	if ($(this).val().length < 1) {
+		console.log('empty chart')
+		createChart({
+			name: ' ',
+			dateArray: [],
+		}, $(this).data('column'));
+	}
+		console.log($(this).data('column'));
 	// Remove event handlers
 	$('#left-search').off('keydown');
 	$('#left-search').off('keyup');

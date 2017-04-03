@@ -46,7 +46,7 @@ h3 {
 	margin-right: auto;
 	margin-left: auto;
 	right: 15px;
-	font-size: 24px;
+	font-size: 1.2em;
 	opacity: 0.0;
 	position: absolute;
 	z-index: 600;
@@ -117,3 +117,7 @@ ul.values {
 	float: left;
 	width: 100px;
 }
+#chartContainer {
+	height: 200px;
+}
+

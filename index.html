@@ -6,6 +6,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+	<script src="assets/canvasJS/canvasjs.min.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js"></script>
 	<link rel="stylesheet" href="assets/css/style.css">
 	<script src="assets/sweetalert-master/dist/sweetalert.min.js"></script>
@@ -28,7 +29,7 @@
 			<!-- FIRST ROW -->
 			<!-- DATE PICKER -->
 
-<!-- <<<<<<< HEAD -->
+			<!-- <<<<<<< HEAD -->
 			<!-- FIRST ROW -->
 			<div class="row1">
 				<!-- DATE PICKER -->
@@ -39,13 +40,13 @@
 						<div class="form-group date">
 							<div class='input-group'>
 								<label for="start-date">Search Start Date</label>
-								<input type='date' id="start-date" placeholder="Start Date..." class="form-control" />
+								<input type="date" id="start-date" class="form-control" placeholder="Start Date" />  
 							</div>
 						</div>
 						<div class="form-group date">
 							<div class="input-group">
 								<label for="end-date">Search End Date</label>
-								<input type="date" id="end-date" class="form-control" placeholder="Start Date" />    
+								<input type="date" id="end-date" class="form-control" placeholder="End Date" />    
 							</div>
 
 						</div>
@@ -96,86 +97,51 @@
 				<div class="row3">
 
 
-					<!-- <!-- LEFT PANEL DISPLAY 
-					<div class="col-xs-6">
+					<!--FOURTH ROW-->
+					<div class="row4">
 
-						<div class="row">
+						<!-- LEFT PANEL RESULTS DISPLAY -->
+						<div class="col-xs-12">
 
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h3 id="left-stock-name">Selected Stock #1</h3>
+							<div class="row">
+								<div class="col-xs-6">
+									<div class="panel panel-default row">
+										<div class="panel-heading">
+											<h3 id="left-stock-ticker" class="panel-title">Stock #1 Results Display</h3>
+											<p id="left-stock-name"></p>
+										</div>
+									</div>
 								</div>
-								<div class="panel-body">
-									<div class="text-center">
 
+								<div class="col-xs-6">
+									<div class="panel panel-default row">
+										<div class="panel-heading">
+											<h3 id="right-stock-ticker" class="panel-title">Stock #2 Results Display</h3>
+											<p id="right-stock-name"></p>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					</div>
 
-					RIGHT PANEL DISPLAY
-					<div class="col-xs-6">
-
-						<div class="row">
-
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h3 id="right-stock-name">Selected Stock #2</h3>
-								</div>
-								<div class="panel-body">
-									<div class="text-center">
-
-									</div>
-								</div>
+							<div class="row">
+								<div id="chartContainer"></div>
 							</div>
-						</div>
-					</div>
-				</div> -->
-
-
-				<!--FOURTH ROW-->
-				<div class="row4">
-
-					<!-- LEFT PANEL RESULTS DISPLAY -->
-					<div class="col-xs-6">
-
-						<div class="row">
-
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h3 id="left-stock-ticker" class="panel-title">Stock #1 Results Display</h3>
-								<p id="left-stock-name"></p>
-								</div>
+							
+							<div class="col-xs-6">
 								<div class="panel-body">
 									<ul class="values" id="left-stock-values">
-
 									</ul>
 								</div>
 							</div>
-						</div>
-					</div>
-
-					<!-- RIGHT PANEL RESULTS DISPLAY -->
-					<div class="col-xs-6">
-
-						<div class="row">
-
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h3 id="right-stock-ticker" class="panel-title">Stock #2 Results Display</h3>
-									<p id="right-stock-name"></p>
-								</div>
+							<div class="col-xs-6">
 								<div class="panel-body">
 									<ul class="values" id="right-stock-values">
-
 									</ul>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-
 			</div>
 
 
