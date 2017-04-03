@@ -21,7 +21,7 @@ $("#left-button").on("click", function(){  // grabs the values from the left for
 		tickerOne: tickerOne,
 		startDateSelected: startDateSelectedOne,
 		endDateSelected: endDateSelectedOne
-	}
+	} 
 
 
 	database.ref().push(stockObjectOne).then(function(snapshot){

@@ -1,17 +1,19 @@
 var makeQueryURLOne = function() {
 	var startDate = stockObjectOne.startDateSelectedOne;
+	var exchangeOne = stockObjectOne.exchange;
 	var endDate = stockObjectOne.endDateSelectedOne;
 	var tickerSymbolOne = stockObjectOne.tickerOne;
-	var queryURLOne = "https://www.quandl.com/api/v3/datasets/WIKI/" + tickerSymbolOne + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
+	var queryURLOne = "https://www.quandl.com/api/v3/datasets/GOOG/" + exchangeOne + "_"+ tickerSymbolOne + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
 	return queryURLOne; 
 
  }
 
 var makeQueryURLTwo = function() {
 	var tickerSymbolTwo = stockObjectTwo.tickerTwo;
+	var exchangeTwo = stockObjectTwo.exchange;
 	var startDate = stockObjectOne.startDateSelectedOne;
 	var endDate = stockObjectOne.endDateSelectedOne;
-	var queryURLTwo = "https://www.quandl.com/api/v3/datasets/WIKI/" + tickerSymbolTwo + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
+	var queryURLTwo = "https://www.quandl.com/api/v3/datasets/GOOG/"+ exchangeTwo + "_" + tickerSymbolTwo + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
 	return queryURLTwo;
 }
 
