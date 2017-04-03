@@ -1,3 +1,11 @@
+var firstArr = [];
+var secondArr = [];
+var nameOne = ' ';
+var nameTwo = ' ';
+var minimum = 99999999;
+// var maximum = 0;
+
+
 var makeQueryURLOne = function() {
 	var startDate = stockObjectOne.startDateSelected;
 	var endDate = stockObjectOne.endDateSelected;
@@ -5,7 +13,7 @@ var makeQueryURLOne = function() {
 	var queryURLOne = "https://www.quandl.com/api/v3/datasets/WIKI/" + tickerSymbolOne + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
 	return queryURLOne; 
 
- }
+}
 
 var makeQueryURLTwo = function() {
 	var tickerSymbolTwo = stockObjectTwo.tickerTwo;
@@ -23,6 +31,83 @@ var startSender = function(arr) { // cute little function that grab the last ite
 var endSender = function(arr) { // cute little function that grabs the first item in an array an returns it. 
 	var endDate = arr[0];
 	return endDate;
+}
+
+function createChart(stock, column) {
+	stock.dateArray.forEach(function(value, index){
+		console.log(value[1]<minimum);
+		if (value[1] < minimum) {
+			minimum = value[1];
+		}
+
+		if (column === 'left') {
+			firstArr[index] = {x: new Date(value[0]), y: value[1]};
+			nameOne = stock.name;
+		} else {
+			secondArr[index] = {x: new Date(value[0]), y: value[1]};
+			nameTwo = stock.name;
+		}
+	});
+	var chart = new CanvasJS.Chart("chartContainer", {
+		title: {
+			text: 'Value change',
+			fontSize: 10
+		},
+		animationEnabled: true,
+		axisX: {
+			gridColor: "Silver",
+			tickColor: "silver",
+			valueFormatString: "DD/MMM"
+		},
+		toolTip: {
+			shared: true
+		},
+		theme: "theme1",
+		axisY: {
+			gridColor: "Silver",
+			tickColor: "silver",
+			minimum: minimum
+		},
+		legend: {
+			verticalAlign: "center",
+			horizontalAlign: "right"
+		},
+		data: [
+		{
+			type: "line",
+			showInLegend: true,
+			lineThickness: 1,
+			name: nameOne,
+			markerType: "none",
+			color: "#F08080",
+			dataPoints: firstArr
+		},
+		{
+			type: "line",
+			showInLegend: true,
+			name: nameTwo,
+			markerType: 'none',
+			color: "#20B2AA",
+			lineThickness: 1,
+
+			dataPoints: secondArr
+		}
+		],
+		legend: {
+			cursor: "pointer",
+			itemclick: function (e) {
+				if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+					e.dataSeries.visible = false;
+				}
+				else {
+					e.dataSeries.visible = true;
+				}
+				chart.render();
+			}
+		}
+	});
+
+	chart.render();
 }
 
 var displayStockOne = function() {
@@ -71,16 +156,15 @@ function displayResult(stockObject, column) {
 	var ticker = stockObject.ticker;
 	var name = stockObject.name;
 	var valueArray = stockObject.dateArray;
-	// if (name.length > 20) {
-	// 	name = name.slice(0, 18) + '...';
-	// } 
 
+	createChart(stockObject, column);
+	
 	panelTicker.html(ticker);
 	panelName.html(name)
-	valueArray.forEach(function(value){
-		console.log(value);
-		panelValues.append('<li class="row"><span class="liDate">' + value[0] + '</span><span class="liValue">$' + value[1] + '</span></li>')
-	});
+	// valueArray.forEach(function(value){
+	// 	console.log(value);
+	// 	panelValues.append('<li class="row"><span class="liDate">' + value[0] + '</span><span class="liValue">$' + value[1] + '</span></li>')
+	// });
 }
 
 
