@@ -53,6 +53,7 @@ var submitStockOne = function(){
 		stockObjectOne = { // saves all of those into an object
 			stockName: stockNameOne,
 			tickerOne: tickerOne,
+			exchange: exchange,
 			startDateSelected: startDateSelectedOne,
 			endDateSelected: endDateSelectedOne
 		}
@@ -75,6 +76,7 @@ var submitStockTwo = function(){
 		stockObjectTwo = {
 			stockName: stockNameTwo,
 			tickerTwo: tickerTwo,
+			exchange: exchange,
 			startDateSelected: startDateSelectedTwo,
 			endDateSelected: endDateSelectedTwo
 		}
@@ -138,6 +140,7 @@ function setResultClickHandler() {
 		// Set the #left-search data-symbol attribute as the result's data-symbol attribute
 		if (column === 'left') {
 			tickerOne = $(this).data('symbol');
+			exchange = $(this).date('exchange');
 			console.log(tickerOne);
 			// Submit the form
 			$('#left-input-form').submit();
@@ -184,7 +187,7 @@ function typeAhead(response) {
 				symbol = value.Symbol.slice(0, 4) + '...';
 			}
 			// Add it to the result dropdown list
-			$('#' + column + '-type-result').append('<li class="' + column + '-result-li row" data-name="' + value.Name + '" data-symbol="' + value.Symbol + '"><span class="full-name">' + name + '</span><span class="exchange">'  + exchange + ': <span class="ticker">' + symbol + '</span></span></li>');
+			$('#' + column + '-type-result').append('<li class="' + column + '-result-li row" data-name="' + value.Name + '" data-symbol="' + value.Symbol + '" data-exchange="' + value.Exchange + '"><span class="full-name">' + name + '</span><span class="exchange">'  + exchange + ': <span class="ticker">' + symbol + '</span></span></li>');
 		})
 		
 		console.log('CLASS:', $('#left-type-result').attr('class'));
@@ -192,7 +195,6 @@ function typeAhead(response) {
 		setResultClickHandler();
 	}
 }
-
 
 // Handle errors from the ajax request !! Needs improvement
 function handleError(error) {
@@ -214,6 +216,7 @@ function submitAtIndex(index, column) {
 	if (column === 'left') {
 			tickerOne = stockListItem.data('symbol');
 			stockNameOne = stockListItem.data('name');
+			exchange = stockListItem.data('exchange');
 			// Submit the form
 			$('#left-input-form').submit();
 		} else {

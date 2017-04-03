@@ -7,19 +7,23 @@ var minimum = 99999999;
 
 
 var makeQueryURLOne = function() {
+
 	var startDate = stockObjectOne.startDateSelected;
 	var endDate = stockObjectOne.endDateSelected;
+	var exchangeOne = stockObjectOne.exchange;
 	var tickerSymbolOne = stockObjectOne.tickerOne;
-	var queryURLOne = "https://www.quandl.com/api/v3/datasets/WIKI/" + tickerSymbolOne + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
+	var queryURLOne = "https://www.quandl.com/api/v3/datasets/GOOG/" + exchangeOne + "_"+ tickerSymbolOne + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
 	return queryURLOne; 
 
 }
 
 var makeQueryURLTwo = function() {
+	var startDate = stockObjectOne.startDateSelected;
+	var endDate = stockObjectOne.endDateSelected;
 	var tickerSymbolTwo = stockObjectTwo.tickerTwo;
-	var startDate = stockObjectTwo.startDateSelected;
-	var endDate = stockObjectTwo.endDateSelected;
-	var queryURLTwo = "https://www.quandl.com/api/v3/datasets/WIKI/" + tickerSymbolTwo + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
+	var exchangeTwo = stockObjectTwo.exchange;
+	var queryURLTwo = "https://www.quandl.com/api/v3/datasets/GOOG/"+ exchangeTwo + "_" + tickerSymbolTwo + ".json?" + "column_index=1&start_date=" + startDate + "&end_date=" + endDate + "&api_key=JNYYRNrxvRMk1fGkoMUp";
+
 	return queryURLTwo;
 }
 
@@ -50,7 +54,7 @@ function createChart(stock, column) {
 	});
 	var chart = new CanvasJS.Chart("chartContainer", {
 		title: {
-			text: 'Value change',
+			text: 'Stock values over time',
 			fontSize: 10
 		},
 		animationEnabled: true,
@@ -151,16 +155,16 @@ var displayStockTwo = function() {
 function displayResult(stockObject, column) {
 	console.log(stockObject, column);
 	var panelTicker = $('#' + column + '-stock-ticker');
-	var panelName = $('#' + column + '-stock-name');
+	var panelExchange = $('#' + column + '-stock-exchange');
 	var panelValues = $('#' + column + '-stock-values');
 	var ticker = stockObject.ticker;
-	var name = stockObject.name;
+	var exchange = stockObject.exchange;
 	var valueArray = stockObject.dateArray;
 
 	createChart(stockObject, column);
 	
 	panelTicker.html(ticker);
-	panelName.html(name)
+	panelExchange.html(exchange);
 	// valueArray.forEach(function(value){
 	// 	console.log(value);
 	// 	panelValues.append('<li class="row"><span class="liDate">' + value[0] + '</span><span class="liValue">$' + value[1] + '</span></li>')
