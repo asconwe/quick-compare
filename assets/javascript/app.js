@@ -2,11 +2,9 @@ var firstArr = [];
 var secondArr = [];
 var nameOne = ' ';
 var nameTwo = ' ';
-var minimum = 99999999;
-// var maximum = 0;
 
 
-var makeQueryURLOne = function() {
+var makeQueryURLOne = function(stockObjectOne) {
 
 	var startDate = stockObjectOne.startDateSelected;
 	var endDate = stockObjectOne.endDateSelected;
@@ -17,7 +15,7 @@ var makeQueryURLOne = function() {
 
 }
 
-var makeQueryURLTwo = function() {
+var makeQueryURLTwo = function(stockObjectTwo) {
 	var startDate = stockObjectTwo.startDateSelected;
 	var endDate = stockObjectTwo.endDateSelected;
 	var tickerSymbolTwo = stockObjectTwo.tickerTwo;
@@ -39,11 +37,6 @@ var endSender = function(arr) { // cute little function that grabs the first ite
 
 function createChart(stock, column) {
 	stock.dateArray.forEach(function(value, index){
-		console.log(value[1]<minimum);
-		if (value[1] < minimum) {
-			minimum = value[1];
-		}
-
 		if (column === 'left') {
 			firstArr[index] = {x: new Date(value[0]), y: value[1]};
 			nameOne = stock.name;
@@ -70,7 +63,6 @@ function createChart(stock, column) {
 		axisY: {
 			gridColor: "Silver",
 			tickColor: "silver",
-			minimum: minimum
 		},
 		legend: {
 			verticalAlign: "center",
@@ -114,16 +106,16 @@ function createChart(stock, column) {
 	chart.render();
 }
 
-var displayStockOne = function() {
-	console.log(makeQueryURLOne());
+var displayStockOne = function(stockObjectOne) {
+	console.log(makeQueryURLOne(stockObjectOne));
 	$.ajax({
-		url: makeQueryURLOne(),
+		url: makeQueryURLOne(stockObjectOne),
 		method: "GET"
 	}).done(function(response){
 		var stockResultOne= {} // creates an object that will give FE the name, date array, starte date, end date
 		var data = response.dataset;
-		stockResultOne.name = stockNameOne; //user dot notation to create the object.
-		stockResultOne.ticker = tickerOne;
+		stockResultOne.name = stockObjectOne.stockName; //user dot notation to create the object.
+		stockResultOne.ticker = stockObjectOne.tickerOne;
 		stockResultOne.dateArray = data.data;
 		stockResultOne.startDate = startSender(data.data);
 		stockResultOne.endDate = endSender(data.data);
@@ -133,16 +125,16 @@ var displayStockOne = function() {
 }
 
 
-var displayStockTwo = function() {
-	console.log(makeQueryURLTwo());
+var displayStockTwo = function(stockObjectTwo) {
+	console.log(makeQueryURLTwo(stockObjectTwo));
 	$.ajax({
-		url: makeQueryURLTwo(),
+		url: makeQueryURLTwo(stockObjectTwo),
 		method: "GET"
 	}).done(function(response){
 		var stockResultTwo= {} // creates an object that will give FE the name, date array, starte date, end date
 		var data = response.dataset;
-		stockResultTwo.name = stockNameTwo //users dot notation to create the object.
-		stockResultTwo.ticker = tickerTwo;
+		stockResultTwo.name = stockObjectTwo.stockName //users dot notation to create the object.
+		stockResultTwo.ticker = stockObjectTwo.tickerTwo;
 		stockResultTwo.dateArray = data.data;
 		stockResultTwo.startDate = startSender(data.data);
 		stockResultTwo.endDate = endSender(data.data);
