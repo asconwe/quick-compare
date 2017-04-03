@@ -35,11 +35,13 @@ var symbol;
 var exchange;
 var tickerOne;
 var tickerTwo;
+var stockNameOne; 
+var stockNameTwo;
 var stockObjectOne = {};
 var stockObjectTwo = {};
+var today = new Date;
 
 var submitStockOne = function(){  
-	var stockNameOne = $("#left-search").val().trim(); 
 	var startDateSelectedOne = $("#start-date").val().trim(); 
 	var endDateSelectedOne = $("#end-date").val().trim(); 
 	
@@ -66,48 +68,26 @@ var submitStockOne = function(){
 }
 
 var submitStockTwo = function(){
-	var stockNameTwo = $("#right-search").val().trim();
 	var startDateSelectedTwo = $("#start-date").val().trim();
 	var endDateSelectedTwo = $("#end-date").val().trim();
 
-	stockObjectTwo = {
-		stockName: stockNameTwo,
-		tickerTwo: tickerTwo,
-		startDateSelected: startDateSelectedTwo,
-		endDateSelected: endDateSelectedTwo
+	if (validateDateStrings(startDateSelectedTwo, endDateSelectedTwo)) {
+		stockObjectTwo = {
+			stockName: stockNameTwo,
+			tickerTwo: tickerTwo,
+			startDateSelected: startDateSelectedTwo,
+			endDateSelected: endDateSelectedTwo
+		}
+
+		database.ref().push(stockObjectTwo).then(function(snapshot){
+			localStorage.setItem("user_key_two", snapshot.key);
+		});
+
+		displayStockTwo();
+	}else {
+		console.log('not valid');
 	}
-
-	database.ref().push(stockObjectTwo).then(function(snapshot){
-		localStorage.setItem("user_key_two", snapshot.key);
-	});
-
-	displayStockTwo();
 };
-
-function objection(type, str) {
-	$('body').append('<div id="' + type + '" class="objection"></div>');
-	$('#' + type).append('<p>' + str + '</p>');
-	$('#' + type).append('<button id="' + type + '-button" class="btn btn-default"></button>');
-	$('#' + type + '-button').html('Okay');
-	$('#' + type + '-button').click(function(){
-		$('#' + type).remove();
-	});
-}
-
-function validateDateStrings(startDate, endDate) {
-	var startDate = Date.parse(startDate);
-	var endDate = Date.parse(endDate);
-	var today = new Date;
-	if (startDate > endDate) {
-		objection('order', 'Your end-date must come after your start-date');
-		return false;
-	} else if (startDate > today || endDate > today) {
-		objection('future', 'You can\'t pick a date in the future');
-		return false;
-	} else {
-		return true;
-	}
-}
 
 function resetForm(column) {
 	setTimeout(function(){
@@ -123,6 +103,30 @@ function resetForm(column) {
 	
 }
 
+
+function validateDateStrings(startDate, endDate) {
+	var startDate = Date.parse(startDate);
+	var endDate = Date.parse(endDate);
+	if (startDate > endDate) {
+		swal({
+			  title: "Uh oh!",
+			  text: "Make sure that your start date is not beyond the end date!",
+			  type: "error",
+			  confirmButtonText: "Cool"
+			});
+		return false;
+	} else if (startDate > today || endDate > today) {
+		swal({
+			  title: "C'mon!",
+			  text: "Predict the future too? That's flattering, but try again!",
+			  type: "error",
+			  confirmButtonText: "Cool"
+			});
+		return false;
+	} else {
+		return true;
+	}
+}
 
 // Create a new click handler for the dropdown typeahead results
 function setResultClickHandler() {
@@ -209,10 +213,12 @@ function submitAtIndex(index, column) {
 	field.val(stockListItem.data('name'));
 	if (column === 'left') {
 			tickerOne = stockListItem.data('symbol');
+			stockNameOne = stockListItem.data('name');
 			// Submit the form
 			$('#left-input-form').submit();
 		} else {
 			tickerTwo = stockListItem.data('symbol');
+			stockNameTwo = stockListItem.data('symbol');
 			$('#right-input-form').submit();
 		}
 }
@@ -228,10 +234,8 @@ function animate(column) {
 function animateLeftWaiting() {
 	// Stop the animation before adding a new interval (otherwise the animation would be running twice)
 		clearInterval(leftWaitingInterval);
-		var i = 0;
 		// Run a waiting/loading animation
 		leftWaitingInterval = setInterval(function() {
-			// !! Make a better, prettier animation
 			animate('left');
 		}, 560);
 }
@@ -241,7 +245,6 @@ function animateRightWaiting() {
 		clearInterval(rightWaitingInterval);
 		// Run a waiting/loading animation
 		rightWaitingInterval = setInterval(function(){
-			// !! Make a better, prettier animation
 			animate('right')
 		}, 560);
 }
@@ -265,6 +268,32 @@ fieldClass.blur(function() {
 fieldClass.focusin(function() {
 	column = $(this).data('column');
 	field = $('#' + column + '-search');
+	if (field.val().length > 0) {
+		if (column === 'left') {
+			animateLeftWaiting();
+		} else {
+			animateRightWaiting();
+		}
+
+		// Save the user input to the search variable
+		var search = field.val();
+		// If the search is not empty 
+		if (search.length > 0) {
+			// Run the request stock info from MarkitOnDemand API
+			ajaxInterval = setTimeout(function(){
+				var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/jsonp';
+				ajaxRequests[counter] = $.ajax({
+					data: { 'input': search },
+					url: url,
+					dataType: 'jsonp',
+					success: typeAhead,
+					error: handleError,
+					context: this
+				})
+			}, 700);
+		}
+	}
+
 	// When a user types in the search field (key down), do this
 	field.on('keydown', function(event) {
 		// If the key is not an up or down arrow key
@@ -295,10 +324,9 @@ fieldClass.focusin(function() {
 
 	// When the user types in the search field (key up), do this
 	field.on('keyup', function(event) {
-		// !! change this to be if the key is a letter or number
-		// If the key is not an up or dow narrow
+		// If the key is a letter or number
 		if (event.keyCode >= 48 && event.keyCode <= 57 || event.keyCode >= 65 && event.keyCode <= 90 || event.keyCode >= 96 && event.keyCode <= 105 || event.key === "Backspace") {
-			// Add to the ajax request counter !! Should this be moved to the end of this function?
+			// Add to the ajax request counter
 			counter++;
 			// Abort any pending ajax request
 			if (ajaxRequests[counter - 1] !== undefined) {
@@ -328,7 +356,7 @@ fieldClass.focusin(function() {
 					})
 				}, 700);
 			// If the search is empty (if the user deleted their search term), do this
-		} else {
+			} else {
 				// Stop the animation
 				clearInterval(leftWaitingInterval);
 				clearInterval(rightWaitingInterval);
@@ -364,3 +392,10 @@ $('#right-input-form').submit(function(event) {
 	resetForm('right');
 	submitStockTwo();
 });
+
+$('#start-date').val('2017-03-01');
+date = today.toISOString().split('T')[0];
+console.log(date);
+$('#end-date').val(date);
+
+
