@@ -101,6 +101,13 @@ input[type=date] {
 	display: none;
 }
 
+.ticker-symbol {
+	font-family: 'Gurajada', serif;
+	font-size: 1.5em;
+	margin-top: 15px;
+	line-height: 0.3em;
+}
+
 ul.values {
 	list-style-type: none;
 	margin: 0;
@@ -123,6 +130,7 @@ ul.values {
 	float: left;
 	width: 100px;
 }
+
 #chartContainer {
 	height: 250px;
 }
