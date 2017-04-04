@@ -54,15 +54,18 @@ function createChart(stock, column) {
 		axisX: {
 			gridColor: "Silver",
 			tickColor: "silver",
-			valueFormatString: "DD/MMM"
+			valueFormatString: "MM/DD/YYYY",
+			
 		},
 		toolTip: {
-			shared: true
+			shared: true,
+			content: "{name} <br> {x}: ${y}"  
 		},
 		theme: "theme1",
 		axisY: {
 			gridColor: "Silver",
 			tickColor: "silver",
+			prefix: "$" 
 		},
 		legend: {
 			verticalAlign: "center",
@@ -85,7 +88,6 @@ function createChart(stock, column) {
 			markerType: 'none',
 			color: "#20B2AA",
 			lineThickness: 1,
-
 			dataPoints: secondArr
 		}
 		],
