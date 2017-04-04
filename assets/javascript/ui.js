@@ -89,8 +89,8 @@ $( document ).ready(function(){
 				localStorage.setItem("user_key_two", snapshot.key);
 			});
 			
-			stockObjectOne.startDateSelected = startDateSelectedTwo;
-			stockObjectOne.endDateSelected = endDateSelectedTwo;
+			stockObjectOne.startDateSelected = startDateSelectedOne;
+			stockObjectOne.endDateSelected = endDateSelectedOne;
 			displayStockTwo(stockObjectTwo);
 			displayStockOne(stockObjectOne);
 		}else {
@@ -429,6 +429,9 @@ $( document ).ready(function(){
 			startDateSelected: '2016-02-20',
 			endDateSelected: date
 		}
+		$('#left-search').val(stockObjectOne.stockName);
+		$('#start-date').val(stockObjectOne.startDateSelected);
+		$('#end-date').val(stockObjectOne.endDateSelected);
 		displayStockOne(stockObjectOne);
 	};
 
@@ -447,6 +450,9 @@ $( document ).ready(function(){
 			startDateSelected: '2016-02-20',
 			endDateSelected: date
 		}
+		$('#right-search').val(stockObjectOne.stockName);
+		$('#start-date').val(stockObjectOne.startDateSelected);
+		$('#end-date').val(stockObjectOne.endDateSelected);
 		displayStockTwo(stockObjectTwo);
 	};
 
@@ -488,12 +494,12 @@ $( document ).ready(function(){
 			$('#start-date').val(stockObjectTwo.startDateSelected);
 			$('#end-date').val(stockObjectTwo.endDateSelected);
 			console.log(stockObjectTwo);
+			stockObjectTwo.startDateSelected = stockObjectOne.startDateSelected;
+			stockObjectOne.endDateSelected = stockObjectTwo.endDateSelected;
 			displayStockTwo(stockObjectTwo);
+			displayStockOne(stockObjectOne);
 		});
 	}
-
-	$('#start-date').val('2017-03-01');
-	$('#end-date').val(date);
 
 
 });
