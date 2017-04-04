@@ -61,8 +61,10 @@ $( document ).ready(function(){
 		  	database.ref().push(stockObjectOne).then(function(snapshot){
 				localStorage.setItem("user_key_one", snapshot.key); // saves that data in the database.
 			});
-			
+			stockObjectTwo.startDateSelected = startDateSelectedOne;
+			stockObjectTwo.endDateSelected = endDateSelectedOne;
 			displayStockOne(stockObjectOne);
+			displayStockTwo(stockObjectTwo);
 		} else {
 			console.log('not valid');
 		}
@@ -86,8 +88,11 @@ $( document ).ready(function(){
 			database.ref().push(stockObjectTwo).then(function(snapshot){
 				localStorage.setItem("user_key_two", snapshot.key);
 			});
-
+			
+			stockObjectOne.startDateSelected = startDateSelectedOne;
+			stockObjectOne.endDateSelected = endDateSelectedOne;
 			displayStockTwo(stockObjectTwo);
+			displayStockOne(stockObjectOne);
 		}else {
 			console.log('not valid');
 		}
@@ -140,14 +145,15 @@ $( document ).ready(function(){
 			// Get stock company name from the data-name attribute of the result clicked and populate the search field with it
 			field.val($(this).data('name'));
 			// Set the #left-search data-symbol attribute as the result's data-symbol attribute
+			exchange = $(this).data('exchange');
 			if (column === 'left') {
 				tickerOne = $(this).data('symbol');
-				exchange = $(this).data('exchange');
-				console.log(tickerOne);
+				stockNameOne = $(this).data('name');
 				// Submit the form
 				$('#left-input-form').submit();
 			} else {
-				tickerTwo = $(this).data(symbol);
+				tickerTwo = $(this).data('symbol');
+				stockNameTwo = $(this).data('name');
 				// Submit the form
 				$('#right-input-form').submit();
 			}
@@ -423,6 +429,9 @@ $( document ).ready(function(){
 			startDateSelected: '2016-02-20',
 			endDateSelected: date
 		}
+		$('#left-search').val(stockObjectOne.stockName);
+		$('#start-date').val(stockObjectOne.startDateSelected);
+		$('#end-date').val(stockObjectOne.endDateSelected);
 		displayStockOne(stockObjectOne);
 	};
 
@@ -441,16 +450,15 @@ $( document ).ready(function(){
 			startDateSelected: '2016-02-20',
 			endDateSelected: date
 		}
+		$('#right-search').val(stockObjectOne.stockName);
+		$('#start-date').val(stockObjectOne.startDateSelected);
+		$('#end-date').val(stockObjectOne.endDateSelected);
 		displayStockTwo(stockObjectTwo);
 	};
 
 	if(localStorage.getItem("user_key_one") === null){
 		submitDefaultOne(); //grab default data if there is no local key
 	} else {
-		var endDateSelected;
-		var startDateSelected;
-		var stockName;
-		var tickerOne;
 		var key = localStorage.getItem("user_key_one");
 		database.ref(key).on("value", function(snapshot){
 			console.log(snapshot.val());
@@ -461,18 +469,17 @@ $( document ).ready(function(){
 				stockName: snapshot.val().stockName,
 				tickerOne: snapshot.val().tickerOne
 			}
+			$('#left-search').val(stockObjectOne.stockName);
+			$('#start-date').val(stockObjectOne.startDateSelected);
+			$('#end-date').val(stockObjectOne.endDateSelected);
 			console.log(stockObjectOne);
 			displayStockOne(stockObjectOne);
 		});
-	};
+	}
 
 	if(localStorage.getItem("user_key_two") === null){
 		submitDefaultTwo(); //grab default data if there is no local key
 	} else {
-		var endDateSelected;
-		var startDateSelected;
-		var stockName;
-		var tickerTwo;
 		var key = localStorage.getItem("user_key_two");
 		database.ref(key).on("value", function(snapshot){
 			console.log(snapshot.val());
@@ -483,13 +490,16 @@ $( document ).ready(function(){
 				stockName: snapshot.val().stockName,
 				tickerTwo: snapshot.val().tickerTwo
 			}
+			$('#right-search').val(stockObjectTwo.stockName);
+			$('#start-date').val(stockObjectTwo.startDateSelected);
+			$('#end-date').val(stockObjectTwo.endDateSelected);
 			console.log(stockObjectTwo);
+			stockObjectTwo.startDateSelected = stockObjectOne.startDateSelected;
+			stockObjectOne.endDateSelected = stockObjectTwo.endDateSelected;
 			displayStockTwo(stockObjectTwo);
+			displayStockOne(stockObjectOne);
 		});
-	};
-
-	$('#start-date').val('2017-03-01');
-	$('#end-date').val(date);
+	}
 
 
 });

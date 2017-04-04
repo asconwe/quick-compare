@@ -48,21 +48,23 @@ function createChart(stock, column) {
 	var chart = new CanvasJS.Chart("chartContainer", {
 		title: {
 			text: 'Stock values over time',
-			fontSize: 10
 		},
 		animationEnabled: true,
 		axisX: {
 			gridColor: "Silver",
 			tickColor: "silver",
-			valueFormatString: "DD/MMM"
+			valueFormatString: "MM/DD/YYYY",
+			
 		},
 		toolTip: {
-			shared: true
+			shared: true,
+			content: "{name} <br> {x}: ${y}"  
 		},
 		theme: "theme1",
 		axisY: {
 			gridColor: "Silver",
 			tickColor: "silver",
+			prefix: "$" 
 		},
 		legend: {
 			verticalAlign: "center",
@@ -85,7 +87,6 @@ function createChart(stock, column) {
 			markerType: 'none',
 			color: "#20B2AA",
 			lineThickness: 1,
-
 			dataPoints: secondArr
 		}
 		],
@@ -116,6 +117,7 @@ var displayStockOne = function(stockObjectOne) {
 		var data = response.dataset;
 		stockResultOne.name = stockObjectOne.stockName; //user dot notation to create the object.
 		stockResultOne.ticker = stockObjectOne.tickerOne;
+		stockResultOne.exchange = stockObjectOne.exchange;
 		stockResultOne.dateArray = data.data;
 		stockResultOne.startDate = startSender(data.data);
 		stockResultOne.endDate = endSender(data.data);
@@ -135,6 +137,7 @@ var displayStockTwo = function(stockObjectTwo) {
 		var data = response.dataset;
 		stockResultTwo.name = stockObjectTwo.stockName //users dot notation to create the object.
 		stockResultTwo.ticker = stockObjectTwo.tickerTwo;
+		stockResultTwo.exchange = stockObjectTwo.exchange;
 		stockResultTwo.dateArray = data.data;
 		stockResultTwo.startDate = startSender(data.data);
 		stockResultTwo.endDate = endSender(data.data);
