@@ -48,7 +48,6 @@ function createChart(stock, column) {
 	var chart = new CanvasJS.Chart("chartContainer", {
 		title: {
 			text: 'Stock values over time',
-			fontSize: 10
 		},
 		animationEnabled: true,
 		axisX: {

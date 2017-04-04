@@ -1,6 +1,7 @@
 body {
 	background-image: url('../images/background_1.jpg');		
 	background-color: #08253d;
+	font-size: 2.0em;
 }
 
 h1 {
@@ -36,9 +37,14 @@ h3 {
 	position: relative;
 }
 
+input[type=date] {
+	font-family: arial;
+}
+
 #left-search, #right-search {
 	background-color: #ffffff;
 	border-radius: 0;
+	font-size: 1.2em;
 }
 
 .animation {
@@ -46,11 +52,11 @@ h3 {
 	margin-right: auto;
 	margin-left: auto;
 	right: 15px;
-	font-size: 1.2em;
+	font-size: 1.1;
 	opacity: 0.0;
 	position: absolute;
 	z-index: 600;
-	top: 30px;
+	top: 37px;
 }
 
 #right-type-result, #left-type-result {
@@ -118,6 +124,6 @@ ul.values {
 	width: 100px;
 }
 #chartContainer {
-	height: 200px;
+	height: 250px;
 }
 
