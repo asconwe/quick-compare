@@ -82,7 +82,7 @@ $( document ).ready(function(){
 				startDateSelected: startDateSelectedOne,
 				endDateSelected: endDateSelectedOne
 			}
-
+			console.log('exchange in submit stock two', exchange);
 			database.ref().push(stockObjectTwo).then(function(snapshot){
 				localStorage.setItem("user_key_two", snapshot.key);
 			});
@@ -173,6 +173,7 @@ $( document ).ready(function(){
 		if (arr !== null) {
 			// For each result in response array
 			arr.forEach(function(value, index) {
+				// If not in the Bats exchange
 				if (value.Exchange[0] !== 'B') {
 					// Truncate the displayed name if it is longer than 21 character
 					if (value.Name.length < 22) {
@@ -218,16 +219,17 @@ $( document ).ready(function(){
 		var stockListItem = $('.' + column + '-result-li').eq(index);
 		field.val(stockListItem.data('name'));
 		if (column === 'left') {
-				tickerOne = stockListItem.data('symbol');
-				stockNameOne = stockListItem.data('name');
-				exchange = stockListItem.data('exchange');
-				// Submit the form
-				$('#left-input-form').submit();
-			} else {
-				tickerTwo = stockListItem.data('symbol');
-				stockNameTwo = stockListItem.data('name');
-				$('#right-input-form').submit();
-			}
+			tickerOne = stockListItem.data('symbol');
+			stockNameOne = stockListItem.data('name');
+			exchange = stockListItem.data('exchange');
+			// Submit the form
+			$('#left-input-form').submit();
+		} else {
+			tickerTwo = stockListItem.data('symbol');
+			stockNameTwo = stockListItem.data('name');
+			exchange = stockListItem.data('exchange');
+			$('#right-input-form').submit();
+		}
 	}
 
 	function animate(column) {
