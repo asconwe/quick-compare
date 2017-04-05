@@ -17,7 +17,6 @@ h3 {
 .container {
 	float:top;
 	text-align:center;
-	padding: 100px;
 	background-color: white;
 	padding-top:10px;
 	margin-left:auto;
@@ -57,6 +56,14 @@ input[type=date] {
 	position: absolute;
 	z-index: 600;
 	top: 37px;
+}
+
+.searching {
+	display: auto;
+}
+
+.dotdotdot {
+	display: none;
 }
 
 #right-type-result, #left-type-result {
@@ -133,5 +140,15 @@ ul.values {
 
 #chartContainer {
 	height: 250px;
+}
+
+@media (max-width: 600px) {
+	.searching {
+		display: none;
+	}
+
+	.dotdotdot {
+		display: inline;
+	}
 }
 
