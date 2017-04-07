@@ -1,14 +1,3 @@
-/*
-X: To do: Divide between left and right searches
-X: To do: Improve ajax error handling / find out about current errors
-X: To do: Make arrow key navigation format consistent with hover
-X: To do: Enter key should behave the same as click
-X: To do: On submit, if there is no data-symbol attribute, then search markitondemand api for one before submitting to quandl api
-	Above: resolved by removing the search button entirely
-To do: Prevent -1 from pointing to the end of the list
-To do: Perform validation on the dates
-To do: Add a searching animation
-*/
 $( document ).ready(function(){
 
 
@@ -133,7 +122,6 @@ $( document ).ready(function(){
 	function setResultClickHandler() {
 		// On reult click, do this
 		$('.' + column + '-result-li').mousedown(function(){
-			console.log('click');
 			// Get stock company name from the data-name attribute of the result clicked and populate the search field with it
 			field.val($(this).data('name'));
 			// Set the #left-search data-symbol attribute as the result's data-symbol attribute
@@ -192,7 +180,6 @@ $( document ).ready(function(){
 				}
 			})
 			
-			console.log('CLASS:', $('#left-type-result').attr('class'));
 			// Set a click handler for the results
 			setResultClickHandler();
 		}
@@ -260,13 +247,12 @@ $( document ).ready(function(){
 	// On search field blur, do this
 	fieldClass.blur(function() {
 		if ($(this).val().length < 1) {
-			console.log('empty chart')
 			createChart({
 				name: ' ',
 				dateArray: [],
 			}, $(this).data('column'));
 		}
-			console.log($(this).data('column'));
+
 		// Remove event handlers
 		$('#left-search').off('keydown');
 		$('#left-search').off('keyup');
@@ -279,10 +265,13 @@ $( document ).ready(function(){
 	});
 
 	fieldClass.focusin(function() {
+		// Get which column was focused
 		column = $(this).data('column');
 		field = $('#' + column + '-search');
+		// If there is something in it
 		if (field.val().length > 0) {
 			if (column === 'left') {
+				// Run search animation in that column
 				animateLeftWaiting();
 			} else {
 				animateRightWaiting();
@@ -292,7 +281,7 @@ $( document ).ready(function(){
 			var search = field.val();
 			// If the search is not empty 
 			if (search.length > 0) {
-				// Run the request stock info from MarkitOnDemand API
+				// Request stock info from MarkitOnDemand API
 				ajaxInterval = setTimeout(function(){
 					var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/jsonp';
 					ajaxRequests[counter] = $.ajax({
@@ -398,7 +387,6 @@ $( document ).ready(function(){
 	});
 
 	$('#right-input-form').submit(function(event) {
-		console.log('submit', tickerTwo);
 		// Prevent default submit behavior
 		event.preventDefault();
 		// Submit the right form
@@ -408,7 +396,6 @@ $( document ).ready(function(){
 
 	//left side default data
 	var submitDefaultOne = function(){
-		console.log('submit default one'); 
 		var stockNameOne = "Boeing Co";
 		var tickerOne = "BA";
 
@@ -486,6 +473,4 @@ $( document ).ready(function(){
 			displayStockOne(stockObjectOne);
 		});
 	}
-
-
 });

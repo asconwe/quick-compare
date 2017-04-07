@@ -36,6 +36,9 @@ var endSender = function(arr) { // cute little function that grabs the first ite
 }
 
 function createChart(stock, column) {
+	var chartStart = new Date(stock.startDate[0]);
+	var chartEnd = new Date(stock.endDate[0]);
+	console.log(chartStart, chartEnd);
 	stock.dateArray.forEach(function(value, index){
 		if (column === 'left') {
 			firstArr[index] = {x: new Date(value[0]), y: value[1]};
@@ -54,7 +57,8 @@ function createChart(stock, column) {
 			gridColor: "Silver",
 			tickColor: "silver",
 			valueFormatString: "MM/DD/YYYY",
-			
+			minimum: chartStart,
+      maximum: chartEnd
 		},
 		toolTip: {
 			shared: true,
