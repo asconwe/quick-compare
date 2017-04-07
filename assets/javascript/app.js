@@ -114,7 +114,7 @@ var displayStockOne = function(stockObjectOne) {
 	}).done(function(response){
 		var stockResultOne= {} // creates an object that will give FE the name, date array, starte date, end date
 		var data = response.dataset;
-		stockResultOne.name = stockObjectOne.stockName; //user dot notation to create the object.
+		stockResultOne.name = stockObjectOne.stockName; // uses dot notation to create the object.
 		stockResultOne.ticker = stockObjectOne.tickerOne;
 		stockResultOne.exchange = stockObjectOne.exchange;
 		stockResultOne.dateArray = data.data;

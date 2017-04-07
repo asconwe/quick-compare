@@ -65,16 +65,12 @@ $( document ).ready(function(){
 			stockObjectTwo.endDateSelected = endDateSelectedOne;
 			displayStockOne(stockObjectOne);
 			displayStockTwo(stockObjectTwo);
-		} else {
-			console.log('not valid');
-		}
+		} 
 	}
 
 	var submitStockTwo = function(){
 		var startDateSelectedOne = $("#start-date").val().trim(); 
 		var endDateSelectedOne = $("#end-date").val().trim(); 
-		console.log(startDateSelectedOne);
-		console.log(endDateSelectedOne);
 		
 		if (validateDateStrings(startDateSelectedOne, endDateSelectedOne)) {
 			stockObjectTwo = {
@@ -84,7 +80,6 @@ $( document ).ready(function(){
 				startDateSelected: startDateSelectedOne,
 				endDateSelected: endDateSelectedOne
 			}
-			console.log('exchange in submit stock two', exchange);
 			database.ref().push(stockObjectTwo).then(function(snapshot){
 				localStorage.setItem("user_key_two", snapshot.key);
 			});
@@ -93,8 +88,6 @@ $( document ).ready(function(){
 			stockObjectOne.endDateSelected = endDateSelectedOne;
 			displayStockTwo(stockObjectTwo);
 			displayStockOne(stockObjectOne);
-		}else {
-			console.log('not valid');
 		}
 	};
 
@@ -107,7 +100,6 @@ $( document ).ready(function(){
 			$('#' + column + '-button').val('search');
 			// Clear the typeahead results
 			$('#' + column + '-type-result').html('');
-			console.log('submitted');
 		}, 20)
 		
 	}
@@ -174,7 +166,6 @@ $( document ).ready(function(){
 		$('#' + column + '-button').val('search');
 		// Clear previous typeahead results
 		$('#' + column + '-type-result').html('');
-		// !! Make sure this if statement useful
 		// If there is something in the response array
 		if (arr !== null) {
 			// For each result in response array
@@ -207,12 +198,11 @@ $( document ).ready(function(){
 		}
 	}
 
-	// Handle errors from the ajax request !! Needs improvement
+	// Handle errors from the ajax request
 	function handleError(error) {
 		console.log('error', error);
 		clearInterval(leftWaitingInterval);
 		clearInterval(rightWaitingInterval);
-		$('#' + column + '-button').val('search');
 	}
 
 	// Highlight the result list item at a given index
@@ -439,7 +429,6 @@ $( document ).ready(function(){
 
 	//right side default data
 	var submitDefaultTwo = function(){
-		console.log('submit default two')
 		var stockNameTwo = "3M Company" ;
 		var tickerTwo = "MMM";
 
@@ -461,7 +450,6 @@ $( document ).ready(function(){
 	} else {
 		var key = localStorage.getItem("user_key_one");
 		database.ref(key).on("value", function(snapshot){
-			console.log(snapshot.val());
 			stockObjectOne = {
 				endDateSelected: snapshot.val().endDateSelected,
 				startDateSelected: snapshot.val().startDateSelected,
@@ -472,7 +460,6 @@ $( document ).ready(function(){
 			$('#left-search').val(stockObjectOne.stockName);
 			$('#start-date').val(stockObjectOne.startDateSelected);
 			$('#end-date').val(stockObjectOne.endDateSelected);
-			console.log(stockObjectOne);
 			displayStockOne(stockObjectOne);
 		});
 	}
@@ -482,7 +469,6 @@ $( document ).ready(function(){
 	} else {
 		var key = localStorage.getItem("user_key_two");
 		database.ref(key).on("value", function(snapshot){
-			console.log(snapshot.val());
 			stockObjectTwo = {
 				endDateSelected: snapshot.val().endDateSelected,
 				startDateSelected: snapshot.val().startDateSelected,
@@ -493,7 +479,7 @@ $( document ).ready(function(){
 			$('#right-search').val(stockObjectTwo.stockName);
 			$('#start-date').val(stockObjectTwo.startDateSelected);
 			$('#end-date').val(stockObjectTwo.endDateSelected);
-			console.log(stockObjectTwo);
+
 			stockObjectTwo.startDateSelected = stockObjectOne.startDateSelected;
 			stockObjectOne.endDateSelected = stockObjectTwo.endDateSelected;
 			displayStockTwo(stockObjectTwo);
