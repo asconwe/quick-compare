@@ -450,9 +450,9 @@ $( document ).ready(function(){
 			startDateSelected: '2016-02-20',
 			endDateSelected: date
 		}
-		$('#right-search').val(stockObjectOne.stockName);
-		$('#start-date').val(stockObjectOne.startDateSelected);
-		$('#end-date').val(stockObjectOne.endDateSelected);
+		$('#right-search').val(stockObjectTwo.stockName);
+		$('#start-date').val(stockObjectTwo.startDateSelected);
+		$('#end-date').val(stockObjectTwo.endDateSelected);
 		displayStockTwo(stockObjectTwo);
 	};
 
