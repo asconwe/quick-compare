@@ -108,7 +108,6 @@ function createChart(stock, column) {
 }
 
 var displayStockOne = function(stockObjectOne) {
-	console.log(makeQueryURLOne(stockObjectOne));
 	$.ajax({
 		url: makeQueryURLOne(stockObjectOne),
 		method: "GET"
@@ -122,13 +121,20 @@ var displayStockOne = function(stockObjectOne) {
 		stockResultOne.startDate = startSender(data.data);
 		stockResultOne.endDate = endSender(data.data);
 		displayResult(stockResultOne, "left");
-		
-	})
+	}).fail(function(error){
+		swal({
+		 	title: "Hmmm",
+		 	text: "It looks like that stock index isn't available",
+		 	type: "error",
+		 	confirmButtonText: "Okay"
+		});
+		$('#left-stock-ticker').html('----');
+		$('#left-stock-exchange').html('----')
+	});
 }
 
 
 var displayStockTwo = function(stockObjectTwo) {
-	console.log(makeQueryURLTwo(stockObjectTwo));
 	$.ajax({
 		url: makeQueryURLTwo(stockObjectTwo),
 		method: "GET"
@@ -142,13 +148,22 @@ var displayStockTwo = function(stockObjectTwo) {
 		stockResultTwo.startDate = startSender(data.data);
 		stockResultTwo.endDate = endSender(data.data);
 		displayResult(stockResultTwo, "right");
-	})
+	}).fail(function(error){
+		swal({
+		 	title: "Hmmm",
+		 	text: "It looks like that stock index isn't available",
+		 	type: "error",
+		 	confirmButtonText: "Okay"
+		});
+		$('#right-stock-ticker').html('----');
+		$('#right-stock-exchange').html('----')
+		
+	});
 }
 
 // Called at .done of Quandl API AJAX request
 // Display the stock object in the specified column
 function displayResult(stockObject, column) {
-	console.log(stockObject, column);
 	var panelTicker = $('#' + column + '-stock-ticker');
 	var panelExchange = $('#' + column + '-stock-exchange');
 	var panelValues = $('#' + column + '-stock-values');
@@ -160,10 +175,7 @@ function displayResult(stockObject, column) {
 	
 	panelTicker.html(ticker);
 	panelExchange.html(exchange);
-	// valueArray.forEach(function(value){
-	// 	console.log(value);
-	// 	panelValues.append('<li class="row"><span class="liDate">' + value[0] + '</span><span class="liValue">$' + value[1] + '</span></li>')
-	// });
+
 }
 
 
